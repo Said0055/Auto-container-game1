@@ -204,6 +204,7 @@ body{background:radial-gradient(circle at 50% -10%,#172b46 0,#080d15 42%,#05080d
 .wheel-modal{position:fixed;inset:0;z-index:260;background:#04070cf2;display:none;align-items:center;justify-content:center;padding:14px}.wheel-modal.show{display:flex}.wheel-card{width:min(520px,100%);background:linear-gradient(160deg,#182536,#090f17);border:1px solid #3c5068;border-radius:24px;padding:18px;text-align:center;box-shadow:0 30px 100px #000e}.wheel-stage{position:relative;width:min(320px,78vw);aspect-ratio:1;margin:12px auto 16px}.wheel-pointer{position:absolute;z-index:4;left:50%;top:-5px;transform:translateX(-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:32px solid #fff;filter:drop-shadow(0 4px 5px #000)}.wheel-disc{width:100%;height:100%;border-radius:50%;border:10px solid #c7a64a;box-shadow:0 0 0 5px #5b471f,0 18px 35px #000b;position:relative;overflow:hidden;transition:transform 4.8s cubic-bezier(.12,.76,.08,1);background:conic-gradient(#e34f62 0 60deg,#3f7ee8 60deg 120deg,#5bbd78 120deg 180deg,#f0ad45 180deg 240deg,#a46be8 240deg 300deg,#36b6b1 300deg 360deg)}.wheel-disc:after{content:"";position:absolute;inset:37%;border-radius:50%;background:radial-gradient(circle,#fff 0 8%,#d6b354 9% 25%,#131b27 26% 100%);box-shadow:0 0 0 5px #fff5}.wheel-labels{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:1000;color:#fff;text-shadow:0 2px 5px #000}.wheel-labels span{position:absolute;width:70px;height:28px;display:grid;place-items:center;font-size:12px;transform:none!important}.wheel-labels span:nth-child(1){top:28px;left:calc(50% - 35px)}.wheel-labels span:nth-child(2){top:76px;right:26px}.wheel-labels span:nth-child(3){bottom:76px;right:26px}.wheel-labels span:nth-child(4){bottom:28px;left:calc(50% - 35px)}.wheel-labels span:nth-child(5){bottom:76px;left:26px}.wheel-labels span:nth-child(6){top:76px;left:26px}.wheel-spin-btn{width:100%;padding:13px;border:0;border-radius:13px;background:linear-gradient(180deg,#ffd86b,#c99a29);color:#181108;font-weight:1000;font-size:15px;cursor:pointer}.wheel-spin-btn:disabled{opacity:.45}.wheel-float{position:fixed;right:14px;bottom:18px;z-index:170;width:62px;height:62px;border-radius:50%;border:2px solid #e7c45e;background:radial-gradient(circle at 35% 30%,#ffe998,#b98016);box-shadow:0 10px 30px #000a,0 0 24px #f3c64c55;color:#151008;font-size:28px;cursor:pointer;animation:wheelPulse 2.2s infinite}.wheel-float .wheel-cd{position:absolute;left:50%;transform:translateX(-50%);bottom:-17px;white-space:nowrap;font-size:9px;font-weight:1000;color:#fff;background:#0a1119dd;border:1px solid #ffffff22;border-radius:999px;padding:3px 6px}@keyframes wheelPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 .sell-flash{animation:sellFlash .55s ease}@keyframes sellFlash{0%{transform:scale(1)}45%{transform:scale(1.05)}100%{transform:scale(1)}}
 .tune-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tune-card{padding:10px;border:1px solid #2a3749;border-radius:12px;background:#0c141e}.tune-card b{display:block}.tune-card .sub{margin:3px 0 7px}.tune-btn{width:100%;padding:8px;border-radius:9px;border:1px solid #42566d;background:#182636;color:#fff;font-weight:900;cursor:pointer}.tune-btn:disabled{opacity:.4}
+
 </style>
 </head>
 <body>
@@ -612,15 +613,39 @@ function weightedRarity(weights){const boosted=effectiveWeights(weights);const t
 function pickCar(c){const mega=readJson(STORAGE_KEY+'_mega_v1',{});const guaranteed=Number(mega.pity||0)>=9;if(guaranteed){const ids=Array.isArray(c.carIds)?CARS.filter(x=>c.carIds.includes(x.id)):CARS;const rare=ids.filter(x=>x.rarity==='Легендарная'||x.rarity==='Мифическая');const fallback=CARS.filter(x=>x.rarity==='Легендарная'||x.rarity==='Мифическая');const list=rare.length?rare:fallback;return list[Math.floor(Math.random()*list.length)]}const rarity=weightedRarity(c.weights);const base=Array.isArray(c.carIds)?CARS.filter(x=>c.carIds.includes(x.id)):CARS;const pool=base.filter(x=>x.rarity===rarity);const fallback=CARS.filter(x=>x.rarity===rarity);const list=pool.length?pool:fallback;return list[Math.floor(Math.random()*list.length)]}
 
 
+function getFallbackUsername(){
+  try{
+    const params=new URLSearchParams(location.search);
+    const q=params.get('username');
+    if(q)return String(q).replace(/^@/,'').trim().toLowerCase();
+    return String(localStorage.getItem('car_drop_guest_username')||'').replace(/^@/,'').trim().toLowerCase();
+  }catch(e){return ''}
+}
+function ensureGuestUsername(){
+  if(getUser()&&getUser().username)return;
+  const current=getFallbackUsername();
+  if(current)return;
+  setTimeout(()=>{
+    const value=prompt('Введите свой Telegram @username для локального профиля (в Telegram Mini App он определится автоматически):','');
+    if(value){localStorage.setItem('car_drop_guest_username',String(value).replace(/^@/,'').trim().toLowerCase());render();toast('👤 Профиль сохранён');}
+  },350);
+}
 function localUsername(){
   const u=getUser();
-  return String((u&&u.username)||"player").replace(/^@/,"").toLowerCase();
+  return String((u&&u.username)||getFallbackUsername()||"player").replace(/^@/,"").toLowerCase();
 }
 function displayUsername(){
   const u=getUser();
   if(u&&u.username)return "@"+u.username;
+  const guest=getFallbackUsername(); if(guest)return '@'+guest;
   if(u&&u.first_name)return u.first_name+" • username не указан";
   return "Telegram • пользователь не определён";
+}
+function profileIdentityText(){
+  const u=getUser();
+  if(u&&u.username)return '@'+u.username;
+  const g=getFallbackUsername();
+  return g?'@'+g:'Telegram • пользователь не определён';
 }
 function telegramIdentity(){
   const u=getUser();
@@ -935,10 +960,11 @@ function wheelRemaining(){const t=Number(extra.spinAt||0);return Math.max(0,t-Da
 function wheelReady(){return wheelRemaining()<=0}
 function formatCooldown(ms){const total=Math.ceil(ms/1000),h=Math.floor(total/3600),m=Math.floor(total%3600/60),sec=total%60;return `${h}ч ${String(m).padStart(2,'0')}м ${String(sec).padStart(2,'0')}с`}
 function updateWheelCd(){const el=document.getElementById('wheelCd');if(!el)return;el.textContent=wheelReady()?'ГОТОВО':formatCooldown(wheelRemaining());const b=document.getElementById('wheelSpinNow');if(b){b.disabled=!wheelReady();b.textContent=wheelReady()?'ВРАЩАТЬ':'ДОСТУПНО ЧЕРЕЗ '+formatCooldown(wheelRemaining())}}
-function openWheel(){document.getElementById('wheelModal').classList.add('show');updateWheelCd()}
-function closeWheel(){document.getElementById('wheelModal').classList.remove('show')}
+function openWheel(){document.getElementById('megaFeaturesModal')?.classList.remove('show');document.getElementById('gameModeScreen')?.classList.remove('show');document.getElementById('wheelModal').classList.add('show');updateWheelCd();const sub=document.querySelector('#wheelModal .sub');if(sub)sub.textContent='Игрок: '+profileIdentityText()}
+function closeWheel(){document.getElementById('wheelModal').classList.remove('show');wheelSpinning=false;updateWheelCd()}
 function dailySpin(){openWheel()}
-function spinWheel(){if(!wheelReady()){toast('🎡 Следующее вращение через '+formatCooldown(wheelRemaining()));return}const rewards=[5000,10000,25000,50000,100000,250000];const index=Math.floor(Math.random()*rewards.length);const n=rewards[index];const disc=document.getElementById('wheelDisc');const turns=5+Math.floor(Math.random()*3);const target=turns*360+(360-index*60-30);disc.style.transform=`rotate(${target}deg)`;const btn=document.getElementById('wheelSpinNow');btn.disabled=true;btn.textContent='КОЛЕСО КРУТИТСЯ…';haptic('medium');setTimeout(()=>{state.balance+=n;state.xp+=60;extra.spinAt=Date.now()+wheelCooldownMs();extraSave();saveAll();render();toast('🎡 Колесо: +'+money(n));winSound();haptic('success');updateWheelCd();btn.textContent='ПОЛУЧЕНО';setTimeout(()=>btn.textContent='ДОСТУПНО ЧЕРЕЗ '+formatCooldown(wheelRemaining()),900)},4900)}
+let wheelSpinning=false;
+function spinWheel(){if(wheelSpinning)return;if(!wheelReady()){toast('🎡 Следующее вращение через '+formatCooldown(wheelRemaining()));return}wheelSpinning=true;const rewards=[5000,10000,25000,50000,100000,250000];const index=Math.floor(Math.random()*rewards.length);const n=rewards[index];const disc=document.getElementById('wheelDisc');const turns=5+Math.floor(Math.random()*3);const target=turns*360+(360-index*60-30);disc.style.transform=`rotate(${target}deg)`;const btn=document.getElementById('wheelSpinNow');btn.disabled=true;btn.textContent='КОЛЕСО КРУТИТСЯ…';haptic('medium');setTimeout(()=>{state.balance+=n;state.xp+=60;extra.spinAt=Date.now()+wheelCooldownMs();extraSave();saveAll();render();toast('🎡 Колесо: +'+money(n));winSound();haptic('success');updateWheelCd();btn.textContent='ПОЛУЧЕНО';wheelSpinning=false;setTimeout(()=>btn.textContent='ДОСТУПНО ЧЕРЕЗ '+formatCooldown(wheelRemaining()),900)},4900)}
 function achievementData(){const unique=new Set(state.garage.map(x=>x.id)).size;return [
  ['first','🚗 Первый дроп',state.opened>=1,'Открой первый контейнер'],['ten','🔟 Десять открытий',state.opened>=10,'Открой 10 контейнеров'],['hundred','💯 Сто открытий',state.opened>=100,'Открой 100 контейнеров'],['collector','📚 Коллекционер',unique>=10,'Собери 10 разных машин'],['legend','🟠 Легенда',state.garage.some(x=>['Легендарная','Мифическая'].includes(x.rarity)),'Получи Легендарную или Мифическую'],['mythic','💎 Мифический дроп',state.garage.some(x=>x.rarity==='Мифическая'),'Получи Мифическую машину'],['rich','💰 Миллионер',state.balance>=1000000,'Достигни 1 000 000 ₽']
 ]}
@@ -958,7 +984,7 @@ function listAuction(uid){const c=state.garage.find(x=>x._uid===uid);if(!c)retur
 function buyAuction(id){const a=auctionData().find(x=>x.id===id);if(!a)return;if(a.seller===localUsername()){toast('Это твой лот');return}if(state.balance<a.price){toast('Недостаточно денег');return}state.balance-=a.price;state.garage.push(Object.assign({},a.car,{_uid:makeUid()}));extra.auctions=auctionData().filter(x=>x.id!==id);extraSave();saveAll();render();showAuction();toast('🔨 Покупка выполнена');haptic('success')}
 function showAuction(){const mine=state.garage.slice(0,8).map(c=>`<div class="auction-row"><div><b>${c.name}</b><div class="sub">Твоя машина • ${c.rarity}</div></div><button class="small-btn" onclick="listAuction('${c._uid}')">Выставить</button></div>`).join('');const lots=auctionData().map(a=>`<div class="auction-row"><div><b>${a.car.name}</b><div class="sub">@${a.seller} • ${a.car.rarity}</div></div><div style="text-align:right"><div class="auction-price">${money(a.price)}</div><button class="small-btn" onclick="buyAuction('${a.id}')">Купить</button></div></div>`).join('');openInfo('🔨 Аукцион',`<h3>Твои машины</h3>${mine||'<div class="empty">Нет машин для выставления.</div>'}<h3 style="margin-top:15px">Лоты игроков</h3>${lots||'<div class="empty">Пока нет лотов.</div>'}`,'Локальный режим: реальные сделки требуют backend')}
 function showHotCase(){ensureDailyExtra();const c=COUNTRY_CASES[currentCountry]?.cases?.[extra.hotCase];if(c)toast('🔥 Горячий контейнер: '+c.name+' со скидкой 15% сегодня')}
-function featureProgressOnOpen(car){bumpTask('opened',1);if(['Легендарная','Мифическая'].includes(car.rarity))bumpTask('rare',1);try{const k=STORAGE_KEY+'_mega_v1';const m=readJson(k,{pity:0,seasonXP:0,missions:{},seasonClaimed:{},collections:{}});m.pity=['Легендарная','Мифическая'].includes(car.rarity)?0:Math.min(10,Number(m.pity||0)+1);m.seasonXP=Number(m.seasonXP||0)+25;const d=dayKey();if(!m.missions||m.missions.day!==d)m.missions={day:d,open:0,drift:0,race:0,claimed:{}};m.missions.open=Number(m.missions.open||0)+1;writeJson(k,m)}catch(e){}}
+function featureProgressOnOpen(car){bumpTask('opened',1);if(['Легендарная','Мифическая'].includes(car.rarity))bumpTask('rare',1);try{const k=STORAGE_KEY+'_mega_v1';const m=readJson(k,{pity:0,seasonXP:0,missions:{},seasonClaimed:{},collections:{}});m.seasonXP=Number(m.seasonXP||0)+25;const d=dayKey();if(!m.missions||m.missions.day!==d)m.missions={day:d,open:0,drift:0,race:0,claimed:{}};m.missions.open=Number(m.missions.open||0)+1;writeJson(k,m)}catch(e){}}
 
 function fillAdmin(){const s=document.getElementById("adminCar");s.innerHTML=CARS.map(c=>`<option value="${c.id}">${c.name} • ${money(c.value)}</option>`).join("");document.getElementById("adminStatus").textContent="👑 Владелец: @Otmar08 • доступ только по Telegram username"}
 function setupAdmin(){if(isAdmin()){document.getElementById("adminWrap").style.display="block";fillAdmin()}else document.getElementById("adminWrap").style.display="none"}
@@ -1082,7 +1108,13 @@ document.getElementById("adminClearGarageBtn").onclick=()=>{const username=docum
 document.getElementById("adminResetBtn").onclick=()=>{const username=document.getElementById("adminUser").value.trim();if(confirm("Полностью сбросить игрока?"))adminCall('/api/admin/reset-player',{username},"Игрок сброшен")};
 document.getElementById("skipOpening").onclick=()=>{if(spinning){skipOpeningRequested=true;const b=document.getElementById("skipOpening");b.disabled=true;b.textContent="⏭ Пропускаем…";haptic("light")}};document.getElementById("closeModal").onclick=closeModal;document.getElementById("modal").onclick=e=>{if(e.target.id==="modal"&&!spinning)closeModal()};document.getElementById("closeInfo").onclick=closeInfo;document.getElementById("infoModal").onclick=e=>{if(e.target.id==="infoModal")closeInfo()};
 
-document.getElementById('wheelFloat').onclick=openWheel;document.getElementById('wheelClose').onclick=closeWheel;document.getElementById('wheelModal').onclick=e=>{if(e.target.id==='wheelModal')closeWheel()};document.getElementById('wheelSpinNow').onclick=spinWheel;setInterval(updateWheelCd,1000);
+function bindWheelUI(){
+ const wf=document.getElementById('wheelFloat'),wc=document.getElementById('wheelClose'),wm=document.getElementById('wheelModal'),ws=document.getElementById('wheelSpinNow');
+ if(!wf||!wc||!wm||!ws)return false;
+ wf.onclick=openWheel;wc.onclick=closeWheel;wm.onclick=e=>{if(e.target.id==='wheelModal')closeWheel()};ws.onclick=spinWheel;updateWheelCd();return true;
+}
+if(!bindWheelUI())document.addEventListener('DOMContentLoaded',bindWheelUI);
+setInterval(updateWheelCd,1000);
 document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('streakBtn').onclick=showStreak;document.getElementById('spinBtn').onclick=dailySpin;document.getElementById('achievementsBtn').onclick=showAchievements;document.getElementById('collectionBtn').onclick=showCollection;document.getElementById('upgradeBtn').onclick=showUpgrades;document.getElementById('auctionBtn').onclick=showAuction;document.getElementById('vipBtn').onclick=showVip;
 
 (async function boot(){
@@ -1092,12 +1124,20 @@ document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('s
  addPlayerIfMissing(localUsername());
  syncCurrentPlayerRecord();
  serverMode=false;
- render();setupAdmin();
+ render();setupAdmin();ensureGuestUsername();
 })();
 </script>
 <button class="wheel-float" id="wheelFloat" aria-label="Колесо удачи">🎡<span class="wheel-cd" id="wheelCd">ГОТОВО</span></button>
 <div class="wheel-modal" id="wheelModal"><div class="wheel-card"><div style="display:flex;justify-content:space-between;align-items:center"><div><h2 style="margin:0">🎡 Колесо удачи</h2><div class="sub" id="wheelSub">1 вращение раз в 3 часа</div></div><button class="xbtn" id="wheelClose">✕</button></div><div class="wheel-stage"><div class="wheel-pointer"></div><div class="wheel-disc" id="wheelDisc"><div class="wheel-labels"><span style="transform:rotate(0deg) translateY(0);">5K</span><span style="transform:rotate(60deg);">10K</span><span style="transform:rotate(120deg);">25K</span><span style="transform:rotate(180deg);">50K</span><span style="transform:rotate(240deg);">100K</span><span style="transform:rotate(300deg);">250K</span></div></div></div><button class="wheel-spin-btn" id="wheelSpinNow">ВРАЩАТЬ</button></div></div>
 
+<style id="gameModeStyle">
+#gameModeScreen{position:fixed;inset:0;z-index:10020;display:none;background:radial-gradient(circle at 50% 0%,#18294f 0%,#070b13 48%,#04060b 100%);padding:16px;box-sizing:border-box;overflow:auto}
+#gameModeScreen.show{display:block}
+.game-mode-card{width:min(1100px,100%);min-height:calc(100vh - 32px);margin:auto;background:linear-gradient(180deg,#101a2b,#080d17);border:1px solid #304261;border-radius:24px;box-shadow:0 25px 90px #000b;overflow:hidden}
+.game-mode-head{position:sticky;top:0;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px;background:#0d1524ee;border-bottom:1px solid #273752;backdrop-filter:blur(10px)}
+.game-mode-title{font-size:25px;font-weight:1000;color:#fff}.game-mode-body{padding:18px}
+#gameModeBody{padding:18px}.game-mode-hero{padding:20px;border:1px solid #304261;border-radius:20px;background:linear-gradient(135deg,#162746,#0d1422);margin-bottom:14px}.game-mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.game-mode-cardbox{padding:15px;border:1px solid #293b5b;border-radius:17px;background:#111b2d}.game-mode-cardbox h3{margin:0 0 7px}.game-mode-cardbox p{color:#9caac1}.game-mode-action{width:100%;border:0;border-radius:12px;padding:12px;background:#3154a8;color:#fff;font-weight:900;cursor:pointer}.game-mode-action.green{background:#1d7450}.game-mode-action.gold{background:#80601a}.game-mode-action.red{background:#7c3038}
+</style>
 <style id="megaFeaturesStyle">
 #megaFeaturesBtn{position:fixed;left:16px;bottom:18px;z-index:9998;border:1px solid #5d7cff;background:linear-gradient(135deg,#182653,#314eb0);color:#fff;border-radius:16px;padding:12px 16px;font-weight:900;box-shadow:0 10px 30px #0008;cursor:pointer}
 #megaFeaturesModal{position:fixed;inset:0;background:#05070dcc;display:none;align-items:center;justify-content:center;z-index:9997;padding:14px}
@@ -1106,6 +1146,13 @@ document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('s
 .mega-head{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:-18px;background:#101625f2;padding:4px 0 14px;z-index:2}
 .mega-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.mega-tile{background:#151e31;border:1px solid #2a3958;border-radius:18px;padding:14px}.mega-tile h3{margin:0 0 7px}.mega-tile p{color:#9eacc6;font-size:13px;min-height:36px}.mega-btn{border:0;border-radius:12px;padding:10px 12px;background:#263a68;color:#fff;font-weight:800;cursor:pointer}.mega-btn:hover{filter:brightness(1.15)}.mega-btn.gold{background:#72561a}.mega-btn.green{background:#1e684a}.mega-btn.red{background:#723039}.mega-small{font-size:12px;color:#8290aa}.mega-row{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #24304a;padding:10px 0}.mega-input{width:100%;box-sizing:border-box;background:#0b1120;border:1px solid #334466;color:#fff;border-radius:10px;padding:10px;margin:5px 0}.mega-select{background:#0b1120;border:1px solid #334466;color:#fff;border-radius:10px;padding:10px;width:100%}.mega-bar{height:8px;background:#202b42;border-radius:10px;overflow:hidden}.mega-bar i{display:block;height:100%;background:#6d8dff}.mega-stat{font-size:20px;font-weight:900}.mega-muted{color:#9ba8bf}.mega-pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#202d49;color:#bcd0ff;font-size:11px;font-weight:800}
 </style>
+
+<div id="gameModeScreen" aria-hidden="true">
+  <div class="game-mode-card">
+    <div class="game-mode-head"><div><div id="gameModeTitle" class="game-mode-title">Режим</div><div id="gameModeSub" class="mega-small">Игровой режим</div></div><button class="xbtn" id="gameModeClose">✕</button></div>
+    <div id="gameModeBody"></div>
+  </div>
+</div>
 
 <button id="megaFeaturesBtn">🚀 Все режимы</button>
 <div id="megaFeaturesModal"><div class="mega-card">
@@ -1140,7 +1187,16 @@ document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('s
  function reloadMega(){const fresh=readJson(MEGA_KEY,{});Object.assign(mega,fresh);mega.missions=mega.missions||{};mega.seasonClaimed=mega.seasonClaimed||{};mega.collections=mega.collections||{};return mega}
  function ms(){writeJson(MEGA_KEY,mega)}
  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
- function modal(title,body){openInfo(title,body,'Расширенные режимы')}
+ function modal(title,body){
+  const screen=document.getElementById('gameModeScreen');
+  if(!screen){openInfo(title,body,'Расширенные режимы');return}
+  document.getElementById('megaFeaturesModal')?.classList.remove('show');
+  document.getElementById('gameModeTitle').textContent=title;
+  document.getElementById('gameModeSub').textContent='Игровой режим • '+(telegramIdentity().username||displayUsername());
+  document.getElementById('gameModeBody').innerHTML=body;
+  screen.classList.add('show');screen.setAttribute('aria-hidden','false');
+  window.scrollTo({top:0,behavior:'instant'});
+}
  function ownedCars(){return Array.isArray(state.garage)?state.garage:[]}
  function pickOwned(){return ownedCars()[0]||null}
  function carPower(c){return 50+Number(c&&c._upgrade||0)*7+Number(c&&c._tune&&c._tune.engine||0)*10+Number(c&&c._tune&&c._tune.turbo||0)*14}
@@ -1150,7 +1206,7 @@ document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('s
  window.megaDrift=function(){reloadMega();const c=pickOwned();if(!c){toast('Нужна машина в гараже');return}const power=carPower(c);const score=Math.floor(500+Math.random()*3500+power*15);mega.driftTotal+=score;mega.driftBest=Math.max(mega.driftBest,score);const reward=Math.floor(score*8);state.balance+=reward;state.xp+=Math.floor(score/20);ms();saveAll();render();modal('💨 Дрифт заезд',`<div class="mega-stat">${score.toLocaleString('ru-RU')} очков</div><p>Рекорд: <b>${mega.driftBest.toLocaleString('ru-RU')}</b><br>Комбо: <b>x${(1+Math.floor(score/1000)).toFixed(0)}</b><br>Награда: <b>${money(reward)}</b></p>`)}
  window.megaTune=function(){reloadMega();const cars=ownedCars().slice(0,20);if(!cars.length){toast('В гараже нет машин');return}modal('🔧 Тюнинг',cars.map(c=>`<div class="mega-row"><div><b>${esc(c.name)}</b><div class="mega-small">Сила ${carPower(c)} • апгрейд ${c._upgrade||0}</div></div><button class="mega-btn" onclick="megaUpgrade('${esc(c._uid)}')">+${money(100000+Number(c._upgrade||0)*50000)}</button></div>`).join(''))}
  window.megaUpgrade=function(uid){const c=ownedCars().find(x=>x._uid===uid);if(!c)return;const cost=100000+Number(c._upgrade||0)*50000;if(state.balance<cost){toast('Недостаточно денег');return}state.balance-=cost;c._upgrade=Number(c._upgrade||0)+1;c._tune=c._tune||{};c._tune.engine=Number(c._tune.engine||0)+1;state.xp+=35;saveAll();render();toast('🔧 Машина улучшена');megaTune()}
- window.megaTrade=function(){reloadMega();const cars=ownedCars();if(!cars.length){toast('Нет машин для обмена');return}const options=cars.map(c=>`<option value="${esc(c._uid)}">${esc(c.name)} • ${esc(c.rarity)}</option>`).join('');modal('🔄 Обмен',`<input id="megaTradeUser" class="mega-input" placeholder="username получателя"><select id="megaTradeCar" class="mega-select">${options}</select><br><button class="mega-btn green" onclick="megaDoTrade()">Передать машину</button><p class="mega-small">В HTML-версии обмен работает через локальные профили на одном устройстве.</p>`)}
+ window.megaTrade=function(){reloadMega();const cars=ownedCars();if(!cars.length){toast('Нет машин для обмена');return}const options=cars.map(c=>`<option value="${esc(c._uid)}">${esc(c.name)} • ${esc(c.rarity)}</option>`).join('');fmodal('🔄 Обмен',`<div class="game-mode-hero"><b>Ты: ${esc(displayUsername())}</b><div class="mega-small">Выбери машину и Telegram @username получателя.</div></div><div class="game-mode-cardbox"><input id="megaTradeUser" class="mega-input" placeholder="@username получателя"><select id="megaTradeCar" class="mega-select">${options}</select><button class="game-mode-action green" onclick="megaDoTrade()">Передать машину</button></div><p class="mega-small">В локальном HTML-профиле получатель должен открыть игру на том же устройстве. Для настоящего обмена между телефонами нужен backend.</p>`)}
  window.megaDoTrade=function(){reloadMega();const user=document.getElementById('megaTradeUser').value.trim().replace(/^@/,'').toLowerCase();const uid=document.getElementById('megaTradeCar').value;if(!user||user===localUsername()){toast('Укажи другого игрока');return}addPlayerIfMissing(user);const players=localPlayers();const target=players[user];const c=ownedCars().find(x=>x._uid===uid);if(!c||!target){toast('Игрок или машина не найдены');return}const idx=state.garage.findIndex(x=>x._uid===uid);if(idx<0){toast('Машина уже отсутствует в гараже');return}state.garage.splice(idx,1);target.state=target.state||{b:0,x:0,o:0,g:[]};target.state.g=Array.isArray(target.state.g)?target.state.g:[];target.state.g.push({id:c.id,uid:makeUid()});players[user]=target;writeJson(LOCAL_PLAYERS_KEY,players);saveAll();render();toast('🔄 Машина передана @'+user+' • получатель увидит её при загрузке своего локального профиля')}
  window.megaCollections=function(){reloadMega();const sets=[['🚗 Немецкая классика',['e36','w24','e46'],150000],['🏎️ Суперкары',['gtr','p911','hur'],500000],['💎 Мифический гараж',['chi','jes','sen'],1500000]];const html=sets.map(set=>{const have=set[1].filter(id=>ownedCars().some(c=>c.id===id)).length;const done=have===set[1].length;return `<div class="mega-row"><div><b>${set[0]}</b><div class="mega-small">${have}/${set[1].length} машин</div><div class="mega-bar"><i style="width:${have/set[1].length*100}%"></i></div></div><button class="mega-btn ${done?'green':''}" ${done&&mega.collections[set[0]]?'disabled':''} onclick="megaClaimCollection('${esc(set[0])}',${set[2]})">${mega.collections[set[0]]?'Получено':done?'Забрать '+money(set[2]):'Собрать'}</button></div>`}).join('');modal('📚 Коллекции',html)}
  window.megaClaimCollection=function(name,reward){const sets={'🚗 Немецкая классика':['e36','w24','e46'],'🏎️ Суперкары':['gtr','p911','hur'],'💎 Мифический гараж':['chi','jes','sen']};if(mega.collections[name])return;const have=sets[name].filter(id=>ownedCars().some(c=>c.id===id)).length;if(have<sets[name].length){toast('Коллекция ещё не собрана');return}mega.collections[name]=true;state.balance+=reward;state.xp+=150;ms();saveAll();render();toast('📚 Коллекция завершена: +'+money(reward));megaCollections()}
@@ -1163,11 +1219,12 @@ document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('s
  window.megaJackpot=function(){reloadMega();const cost=100000;if(state.balance<cost){toast('Для джекпота нужно '+money(cost));return}state.balance-=cost;const roll=Math.random();let reward=0;if(roll<.02)reward=10000000;else if(roll<.10)reward=2000000;else if(roll<.35)reward=500000;else if(roll<.65)reward=150000;state.balance+=reward;if(reward>=2000000)mega.jackpotWins++;state.xp+=reward?30:5;ms();saveAll();render();modal('🎰 Джекпот',`<div class="mega-stat">${reward?('+'+money(reward)):'Не повезло 😅'}</div><p>Ставка: ${money(cost)}<br>Шанс на главный джекпот: 2%</p>`)}
  window.megaCraft=function(){reloadMega();const counts={};ownedCars().forEach(c=>counts[c.id]=(counts[c.id]||0)+1);const rows=Object.entries(counts).filter(([id,n])=>n>=3).map(([id,n])=>{const c=CARS.find(x=>x.id===id);return `<div class="mega-row"><span><b>${esc(c?c.name:id)}</b><div class="mega-small">Дубликатов: ${n} • 3 → 1 улучшенная машина</div></span><button class="mega-btn" onclick="megaDoCraft('${id}')">Объединить</button></div>`}).join('');modal('🧪 Крафт дубликатов',rows||'<div class="mega-muted">Нужно минимум 3 одинаковые машины.</div>')}
  window.megaDoCraft=function(id){const arr=ownedCars().filter(c=>c.id===id);if(arr.length<3){toast('Нужно 3 одинаковые машины');return}const ids=new Set(arr.slice(0,3).map(c=>c._uid));state.garage=ownedCars().filter(c=>!ids.has(c._uid));const base=CARS.find(c=>c.id===id);const rarityIndex=['Обычная','Необычная','Эпическая','Легендарная','Мифическая'].indexOf(base.rarity);const next=CARS.filter(c=>['Обычная','Необычная','Эпическая','Легендарная','Мифическая'][Math.min(4,rarityIndex+1)]===c.rarity)[Math.floor(Math.random()*Math.max(1,CARS.filter(c=>c.rarity===['Обычная','Необычная','Эпическая','Легендарная','Мифическая'][Math.min(4,rarityIndex+1)]).length))]||base;addCarToGarage(next);mega.crafts++;state.xp+=100;mega.seasonXP+=100;ms();saveAll();render();toast('🧪 Крафт: '+next.name);megaCraft()}
- window.megaRatings=function(){reloadMega();const players=Object.values(localPlayers());const rows=players.sort((a,b)=>(b.state.b||0)-(a.state.b||0)).slice(0,10).map((p,i)=>`<div class="mega-row"><span>#${i+1} <b>@${esc(p.username)}</b></span><b>${money(p.state.b||0)}</b></div>`).join('');modal('📊 Рейтинги',`<div class="mega-row"><span>Твои победы</span><b>${mega.raceWins}</b></div><div class="mega-row"><span>Лучший дрифт</span><b>${mega.driftBest.toLocaleString('ru-RU')}</b></div><h3>Богатейшие игроки</h3>${rows||'<div class="mega-muted">Пока только твой профиль.</div>'}`)}
+ window.megaRatings=function(){reloadMega();const players=Object.values(localPlayers());const rows=players.slice().sort((a,b)=>(b.state.b||0)-(a.state.b||0)).slice(0,10).map((p,i)=>`<div class="mega-row"><span>#${i+1} <b>@${esc(p.username)}</b></span><b>${money(p.state.b||0)}</b></div>`).join('');modal('📊 Рейтинги',`<div class="mega-row"><span>Твои победы</span><b>${mega.raceWins}</b></div><div class="mega-row"><span>Лучший дрифт</span><b>${mega.driftBest.toLocaleString('ru-RU')}</b></div><h3>Богатейшие игроки</h3>${rows||'<div class="mega-muted">Пока только твой профиль.</div>'}`)}
  const oldRace=window.megaRace,oldDrift=window.megaDrift;
  const origRace=window.megaRace; window.megaRace=function(){const before=mega.raceRuns;origRace();if(mega.raceRuns>before){mega.missions.day=dayKey();mega.missions.race=(mega.missions.race||0)+1;mega.seasonXP+=40;ms()}}
  const origDrift=window.megaDrift; window.megaDrift=function(){const before=mega.driftTotal;origDrift();if(mega.driftTotal>before){mega.missions.day=dayKey();mega.missions.drift=(mega.missions.drift||0)+(mega.driftTotal-before);mega.seasonXP+=40;ms()}}
- document.getElementById('megaFeaturesBtn').onclick=()=>{updatePity();document.getElementById('megaFeaturesModal').classList.add('show')};document.getElementById('megaClose').onclick=()=>document.getElementById('megaFeaturesModal').classList.remove('show');document.getElementById('megaFeaturesModal').onclick=e=>{if(e.target.id==='megaFeaturesModal')document.getElementById('megaFeaturesModal').classList.remove('show')};
+ document.getElementById('gameModeClose').onclick=()=>{document.getElementById('gameModeScreen').classList.remove('show');document.getElementById('gameModeScreen').setAttribute('aria-hidden','true');};
+ document.getElementById('megaFeaturesBtn').onclick=()=>{reloadMega();updatePity();document.getElementById('megaFeaturesModal').classList.add('show')};document.getElementById('megaClose').onclick=()=>document.getElementById('megaFeaturesModal').classList.remove('show');document.getElementById('megaFeaturesModal').onclick=e=>{if(e.target.id==='megaFeaturesModal')document.getElementById('megaFeaturesModal').classList.remove('show')};
  reloadMega();updatePity();
 // ===== Feature Pack 2 =====
 (function(){
@@ -1175,7 +1232,16 @@ document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('s
  let fp=readJson(FP,{rating:1000,race:{sprint:0,circuit:0,time:0},comboBest:0,week:{},secrets:{},tournament:{}});
  function save(){writeJson(FP,fp)}
  function esc2(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
- function fmodal(t,b){openInfo(t,b,'Новые игровые функции')}
+ function fmodal(t,b){
+  const screen=document.getElementById('gameModeScreen');
+  if(!screen){openInfo(t,b,'Новые игровые функции');return}
+  document.getElementById('megaFeaturesModal').classList.remove('show');
+  document.getElementById('gameModeTitle').textContent=t;
+  document.getElementById('gameModeSub').textContent='Игровой режим • '+(telegramIdentity().username||'профиль');
+  document.getElementById('gameModeBody').innerHTML=b;
+  screen.classList.add('show');screen.setAttribute('aria-hidden','false');
+  window.scrollTo({top:0,behavior:'instant'});
+}
  function cars(){return Array.isArray(state.garage)?state.garage:[]}
  function power(c){return 50+Number(c&&c._upgrade||0)*7+Object.values(c&&c._tune||{}).reduce((a,v)=>a+Number(v||0)*8,0)}
  function weekKey(){const d=new Date();const one=new Date(d.getFullYear(),0,1);return String(Math.ceil((((d-one)/86400000)+one.getDay()+1)/7))+'-'+d.getFullYear()}
@@ -1197,5 +1263,71 @@ document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('s
 
 })();
 </script>
+
+<style id="gameEffectsStyle">
+#gameFxOverlay{position:fixed;inset:0;z-index:11000;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%,rgba(38,64,120,.78),rgba(3,6,12,.96) 68%);backdrop-filter:blur(5px);overflow:hidden}
+#gameFxOverlay.show{display:flex}
+.game-fx{width:min(720px,92vw);text-align:center;color:#fff;position:relative;animation:fxEnter .35s ease-out}
+.game-fx-title{font-size:clamp(32px,8vw,68px);font-weight:1000;letter-spacing:1px;text-shadow:0 8px 30px #000}
+.game-fx-sub{font-size:16px;color:#b8c7e6;margin-top:8px}
+.fx-count{font-size:clamp(70px,18vw,150px);font-weight:1000;animation:fxPulse .7s infinite alternate;text-shadow:0 0 45px rgba(115,170,255,.8)}
+.fx-road{height:150px;margin:24px auto 0;width:min(620px,90vw);position:relative;overflow:hidden;border-radius:18px;background:linear-gradient(#172033 0 55%,#0c1018 55%);border:1px solid #3b4e73}
+.fx-road:before{content:"";position:absolute;left:0;right:0;top:68%;height:7px;background:repeating-linear-gradient(90deg,transparent 0 45px,#d9e2f5 45px 85px);animation:roadMove .28s linear infinite}
+.fx-car{position:absolute;left:8%;bottom:28px;font-size:62px;filter:drop-shadow(0 10px 10px #000);animation:carRun 1.35s ease-in-out infinite}
+.fx-drift-car{position:absolute;left:20%;bottom:28px;font-size:62px;animation:driftSlide .9s ease-in-out infinite alternate;filter:drop-shadow(0 12px 12px #000)}
+.fx-smoke{position:absolute;left:18%;bottom:27px;width:230px;height:80px;opacity:.75;background:radial-gradient(circle,rgba(220,230,245,.55) 0 12%,transparent 38%);filter:blur(5px);animation:smoke .55s infinite alternate}
+.fx-sparks{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,#ffe67b 0 2px,transparent 3px),radial-gradient(circle,#7dd3fc 0 2px,transparent 3px);background-size:90px 110px,130px 150px;animation:sparks .55s linear infinite;opacity:.7}
+.fx-wheel{width:190px;height:190px;margin:18px auto;border:14px solid #263b67;border-top-color:#f4c95d;border-radius:50%;animation:jackpotSpin .8s linear infinite;box-shadow:0 0 45px rgba(244,201,93,.35),inset 0 0 25px #000}
+.fx-wheel:after{content:"🎰";display:grid;place-items:center;height:100%;font-size:75px;animation:fxPulse .4s infinite alternate}
+.fx-slots{display:flex;justify-content:center;gap:10px;margin:18px 0}.fx-slot{width:82px;height:82px;display:grid;place-items:center;background:#111b2d;border:2px solid #7d6330;border-radius:15px;font-size:45px;animation:slotShake .18s infinite alternate}.fx-slot:nth-child(2){animation-delay:.06s}.fx-slot:nth-child(3){animation-delay:.12s}
+.fx-combo{font-size:clamp(55px,14vw,110px);font-weight:1000;color:#ffcf55;text-shadow:0 0 35px #ff8a00;animation:comboPop .45s ease-in-out infinite alternate}
+.fx-combo-bar{width:min(520px,85vw);height:16px;background:#17223a;border-radius:99px;margin:20px auto;overflow:hidden;border:1px solid #38517d}.fx-combo-bar i{display:block;height:100%;width:10%;background:linear-gradient(90deg,#45d483,#ffd34f,#ff6b35);animation:comboBar 1.4s linear forwards}
+.fx-tune-icon{font-size:100px;animation:wrench .65s ease-in-out infinite alternate}.fx-progress{height:13px;width:min(500px,82vw);margin:22px auto;background:#17223a;border-radius:99px;overflow:hidden}.fx-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5d7cff,#57e3b2);animation:tuneProgress 1.7s ease-out forwards}
+@keyframes fxEnter{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}@keyframes fxPulse{from{transform:scale(.92)}to{transform:scale(1.08)}}@keyframes roadMove{from{transform:translateX(0)}to{transform:translateX(-170px)}}@keyframes carRun{0%{transform:translateX(0) scale(.9)}35%{transform:translateX(170px) scale(1.02)}70%{transform:translateX(360px) scale(1.08)}100%{transform:translateX(520px) scale(1)}}@keyframes driftSlide{0%{transform:translateX(0) rotate(-3deg) scale(.9)}35%{transform:translateX(110px) rotate(12deg) scale(1.04)}70%{transform:translateX(230px) rotate(-8deg) scale(1.08)}100%{transform:translateX(330px) rotate(10deg) scale(1)}}@keyframes smoke{from{transform:scale(.7) translateX(0);opacity:.25}to{transform:scale(1.3) translateX(-35px);opacity:.8}}@keyframes sparks{from{transform:translateY(30px)}to{transform:translateY(-30px)}}@keyframes jackpotSpin{0%{transform:rotate(0deg) scale(.88)}50%{transform:rotate(180deg) scale(1.08)}100%{transform:rotate(360deg) scale(.98)}}@keyframes slotShake{from{transform:translateY(-4px)}to{transform:translateY(4px)}}@keyframes comboPop{from{transform:scale(.92) rotate(-2deg)}to{transform:scale(1.08) rotate(2deg)}}@keyframes comboBar{from{width:8%}to{width:100%}}@keyframes wrench{from{transform:rotate(-25deg) scale(.9)}to{transform:rotate(25deg) scale(1.08)}}@keyframes tuneProgress{0%{width:0}35%{width:38%}70%{width:76%}100%{width:100%}}
+
+.fx-ring{position:absolute;left:50%;top:46%;width:260px;height:260px;border:2px solid rgba(100,180,255,.35);border-radius:50%;transform:translate(-50%,-50%);animation:ringPulse 2.2s ease-out infinite}.fx-ring:nth-child(2){width:390px;height:390px;animation-delay:.5s}.fx-ring:nth-child(3){width:540px;height:540px;animation-delay:1s}.fx-light{position:absolute;left:50%;top:48%;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 25px 8px #6cbcff;animation:lightBurst 2.4s ease-in-out infinite}.fx-trackline{position:absolute;left:0;right:0;bottom:20px;height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);animation:trackSweep 1.5s linear infinite}.fx-wrench2{font-size:72px;display:inline-block;animation:wrench2 1.2s ease-in-out infinite}.fx-glow{animation:glowPulse 1.4s ease-in-out infinite alternate}.fx-result{font-size:22px;font-weight:900;margin-top:14px;animation:resultIn .8s ease-out both}
+@keyframes ringPulse{0%{transform:translate(-50%,-50%) scale(.6);opacity:.75}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}@keyframes lightBurst{0%,100%{transform:translate(-50%,-50%) scale(.6);opacity:.35}50%{transform:translate(-50%,-50%) scale(2.2);opacity:1}}@keyframes trackSweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}@keyframes wrench2{0%,100%{transform:rotate(-35deg) scale(.9)}50%{transform:rotate(35deg) scale(1.15)}}@keyframes glowPulse{from{filter:drop-shadow(0 0 8px #5b8cff)}to{filter:drop-shadow(0 0 35px #8cecff)}}@keyframes resultIn{from{opacity:0;transform:translateY(25px) scale(.8)}to{opacity:1;transform:translateY(0) scale(1)}}
+.game-fx-close{margin-top:22px;border:0;border-radius:12px;padding:11px 22px;background:#3154a8;color:#fff;font-weight:900;cursor:pointer}
+#gameSoundBtn{position:fixed;right:16px;bottom:18px;z-index:10001;border:1px solid #3d527c;background:#101a2b;color:#fff;border-radius:14px;padding:10px 13px;font-weight:900;cursor:pointer;box-shadow:0 10px 25px #0008}
+</style>
+
+
+<div id="gameFxOverlay" aria-hidden="true"><div class="game-fx" id="gameFxContent"></div></div>
+<button id="gameSoundBtn" title="Звук">🔊 Звук: ВКЛ</button>
+
+
+<script id="gameEffectsScript">
+(function(){
+  const fx=document.getElementById('gameFxOverlay'), content=document.getElementById('gameFxContent'), soundBtn=document.getElementById('gameSoundBtn');
+  let soundOn=localStorage.getItem('carGameSound')!=='off', audioCtx=null, fxTimer=null;
+  function setSoundButton(){if(soundBtn)soundBtn.textContent=soundOn?'🔊 Звук: ВКЛ':'🔇 Звук: ВЫКЛ'}
+  function audio(){if(!soundOn)return null;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}catch(e){return null}}
+  function tone(freq,dur,type='sine',vol=.045,delay=0){const a=audio();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(freq,a.currentTime+delay);g.gain.setValueAtTime(.0001,a.currentTime+delay);g.gain.exponentialRampToValueAtTime(vol,a.currentTime+delay+.02);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+delay+dur);o.connect(g);g.connect(a.destination);o.start(a.currentTime+delay);o.stop(a.currentTime+delay+dur+.03)}
+  function seq(notes,type='sine',vol=.045){notes.forEach((n,i)=>tone(n[0],n[1]||.12,type,vol,n[2]||i*.11))}
+  function sound(kind){if(kind==='race')seq([[330,.1],[440,.1],[660,.18]],'square',.035);if(kind==='drift')seq([[130,.22],[105,.22],[170,.3]],'sawtooth',.035);if(kind==='tune')seq([[420,.1],[520,.1],[650,.15]],'triangle',.04);if(kind==='jackpot')seq([[330,.1],[440,.1],[550,.1],[700,.18],[880,.35]],'square',.04);if(kind==='combo')seq([[420,.08],[520,.08],[650,.08],[820,.16],[1040,.25]],'sawtooth',.035)}
+  function show(kind,done){clearTimeout(fxTimer);fx.classList.add('show');fx.setAttribute('aria-hidden','false');let body='';
+    if(kind==='race') body='<div class="fx-ring"></div><div class="fx-ring"></div><div class="fx-ring"></div><div class="fx-light"></div><div class="fx-sparks"></div><div class="game-fx-title fx-glow">🏁 ГОТОВЬСЯ К ГОНКЕ</div><div class="fx-count" id="fxCount">3</div><div class="fx-road"><div class="fx-trackline"></div><div class="fx-car">🏎️</div></div><div class="game-fx-sub">Мотор прогревается • стартовая линия • полный газ</div>';
+    if(kind==='drift') body='<div class="fx-ring"></div><div class="fx-sparks"></div><div class="game-fx-title fx-glow">💨 ДРИФТ НАЧИНАЕТСЯ</div><div class="fx-drift-car">🏎️</div><div class="fx-road"><div class="fx-smoke"></div><div class="fx-trackline"></div></div><div class="game-fx-sub">Плавный занос • дым • шины • максимальный угол</div>';
+    if(kind==='tune') body='<div class="fx-ring"></div><div class="fx-wrench2">🔧</div><div class="game-fx-title fx-glow">🔧 ТЮНИНГ АВТОМОБИЛЯ</div><div class="fx-progress"><i></i></div><div class="game-fx-sub">Диагностика → настройка двигателя → проверка мощности</div>';
+    if(kind==='jackpot') body='<div class="fx-ring"></div><div class="fx-ring"></div><div class="fx-sparks"></div><div class="game-fx-title fx-glow">🎰 ДЖЕКПОТ</div><div class="fx-slots"><div class="fx-slot">7️⃣</div><div class="fx-slot">💰</div><div class="fx-slot">7️⃣</div></div><div class="fx-wheel"></div><div class="game-fx-sub">Барабаны замедляются... удача решается сейчас!</div>';
+    if(kind==='detailTune') body='<div class="fx-ring"></div><div class="fx-wrench2">🛠️</div><div class="game-fx-title fx-glow">🛠️ ДЕТАЛЬНЫЙ ТЮНИНГ</div><div class="fx-progress"><i></i></div><div class="fx-result">Двигатель • Турбо • Тормоза • Подвеска • Сцепление</div><div class="game-fx-sub">Калибровка каждой детали отдельно...</div>';
+    if(kind==='combo') body='<div class="fx-ring"></div><div class="fx-sparks"></div><div class="game-fx-title fx-glow">🔥 ДРИФТ-КОМБО</div><div class="fx-combo" id="fxCombo">x1</div><div class="fx-combo-bar"><i></i></div><div class="fx-result">Комбо набирает обороты...</div><div class="game-fx-sub">Каждый удачный трюк повышает множитель</div>';
+    content.innerHTML=body; sound(kind);
+    if(kind==='race'){let n=3;const el=document.getElementById('fxCount');fxTimer=setInterval(()=>{n--;if(n>0){el.textContent=n;tone(220+n*80,.18,'square',.045)}else{clearInterval(fxTimer);el.textContent='GO!';tone(880,.45,'square',.07);setTimeout(()=>{fx.classList.remove('show');fx.setAttribute('aria-hidden','true');done&&done()},1100)}},1100)}
+    else if(kind==='combo'){let n=1;fxTimer=setInterval(()=>{n++;const el=document.getElementById('fxCombo');if(el)el.textContent='x'+n;tone(300+n*80,.16,'sawtooth',.035);if(n>=7){clearInterval(fxTimer);setTimeout(()=>{fx.classList.remove('show');fx.setAttribute('aria-hidden','true');done&&done()},900)}},720)}
+    else {fxTimer=setTimeout(()=>{fx.classList.remove('show');fx.setAttribute('aria-hidden','true');done&&done()},kind==='jackpot'?6500:(kind==='detailTune'?5200:(kind==='tune'?4200:5200)))}
+  }
+  function wrap(name,kind){const original=window[name];if(typeof original!=='function')return;window[name]=function(){show(kind,()=>original.apply(this,arguments))}}
+  if(soundBtn)soundBtn.onclick=()=>{soundOn=!soundOn;localStorage.setItem('carGameSound',soundOn?'on':'off');setSoundButton();if(soundOn)tone(660,.12,'sine',.04)};
+  setSoundButton();
+  wrap('megaRace','race');
+  wrap('megaDrift','drift');
+  wrap('megaTune','tune');
+  wrap('megaJackpot','jackpot');
+  wrap('megaDriftCombo','combo');
+  wrap('megaDetailedTune','detailTune');
+})();
+</script>
+
 </body>
 </html>
