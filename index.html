@@ -187,6 +187,9 @@ body{background:radial-gradient(circle at 50% -10%,#172b46 0,#080d15 42%,#05080d
 /* Roads / city strip below cases */
 #shopView:after{content:"";display:block;height:145px;margin:24px -12px -70px;position:relative;background:linear-gradient(180deg,#0d1720 0 8%,#20262c 8% 76%,#0a0d11 76%);border-top:1px solid #ffffff12;box-shadow:0 -18px 50px #0009,inset 0 2px #ffffff0a;background-image:linear-gradient(180deg,#0d1720 0 8%,#20262c 8% 76%,#0a0d11 76%),repeating-linear-gradient(90deg,transparent 0 46px,#f4e7a522 46px 66px,transparent 66px 112px)}
 #shopView:before{content:"";display:block;height:45px;margin:22px 0 -68px;position:relative;z-index:2;background:linear-gradient(90deg,transparent 0 7%,#64d5ff 7% 8%,transparent 8% 92%,#64d5ff 92% 93%,transparent 93%);opacity:.35;filter:blur(1px)}
+
+/* More natural automotive rendering */
+.vector-car .body:after{content:"";position:absolute;left:18px;right:18px;top:8px;height:10px;border-radius:50%;background:linear-gradient(90deg,transparent,#ffffff28 22%,#ffffff08 52%,transparent 80%);filter:blur(2px);pointer-events:none}.vector-car .wheel i:after{content:"";position:absolute;left:50%;top:2px;width:2px;height:38px;background:#ffffff55;transform:translateX(-50%) rotate(25deg);box-shadow:0 0 0 0 #fff}.vector-car .wheel i{position:absolute;inset:11px;border-radius:50%;background:radial-gradient(circle,#dfe7ee 0 9%,#707b86 10% 17%,#1a2026 18% 46%,#0a0d11 47% 100%);box-shadow:inset 0 0 0 2px #9ca8b3}.vector-car .door:after{content:"";position:absolute;right:7px;top:7px;width:11px;height:3px;border-radius:3px;background:#111923;border:1px solid #ffffff28}.vector-car .front:after{content:"";position:absolute;right:5px;top:4px;width:4px;height:26px;border-radius:3px;background:#ffffff24}.vector-car .plate{font-size:0;box-shadow:inset 0 0 0 1px #111,0 1px 3px #000}.vector-car.sport .body{box-shadow:inset 0 3px 5px #fff6,inset 0 -10px 14px #0009,0 5px 0 #0009,0 12px 18px #0006}.vector-car.suv .body{box-shadow:inset 0 4px 7px #fff5,inset 0 -11px 14px #0009,0 6px 0 #0008,0 13px 20px #0007}
 /* Detailed vector cars: recognizable silhouette, hood, cabin, glass, wheels, lights */
 .premium-car{min-height:180px;display:flex;align-items:center;justify-content:center;position:relative}.vector-car{width:270px;height:160px;position:relative;transform:scale(var(--scale,1));filter:drop-shadow(0 16px 18px #0009)}.vector-car .shadow{position:absolute;left:28px;right:28px;bottom:17px;height:17px;border-radius:50%;background:#000b;filter:blur(7px)}.vector-car .body{position:absolute;left:18px;right:18px;bottom:30px;height:75px;border-radius:30px 34px 18px 18px;background:linear-gradient(160deg,var(--c1),var(--c2));box-shadow:inset 0 3px 5px #fff5,inset 0 -8px 12px #0008,0 4px 0 #0008}.vector-car .body:before{content:"";position:absolute;left:26px;right:25px;top:-38px;height:55px;border-radius:70px 82px 10px 10px;background:linear-gradient(150deg,var(--c1),var(--c2));clip-path:polygon(14% 100%,25% 22%,39% 0,75% 8%,90% 100%);box-shadow:inset 0 2px 5px #fff4}.vector-car .hood{position:absolute;left:6px;top:8px;width:86px;height:32px;border-radius:25px 10px 6px 20px;background:linear-gradient(160deg,#fff3,var(--c1));transform:skewX(-10deg)}.vector-car .cabin{position:absolute;left:72px;top:-29px;width:113px;height:43px;background:#0a111b;clip-path:polygon(8% 100%,24% 5%,78% 0,100% 100%);box-shadow:inset 0 0 0 2px #ffffff18}.vector-car .windshield{position:absolute;left:89px;top:-23px;width:45px;height:31px;background:linear-gradient(135deg,#77d8ff55,#07111ccc);clip-path:polygon(12% 100%,25% 0,100% 0,100% 100%);border-right:1px solid #bdeeff44}.vector-car .side-window{position:absolute;top:-23px;width:39px;height:31px;background:linear-gradient(135deg,#8de6ff33,#07111ccc);border:1px solid #bdeeff25}.vector-car .side-window.one{left:137px;clip-path:polygon(0 0,100% 5%,100% 100%,0 100%)}.vector-car .side-window.two{left:98px;clip-path:polygon(0 5%,90% 0,100% 100%,0 100%)}.vector-car .door{position:absolute;top:19px;width:50px;height:46px;border-right:1px solid #ffffff25}.vector-car .door.one{left:105px}.vector-car .door.two{left:155px}.vector-car .crease{position:absolute;left:55px;right:20px;top:53px;height:2px;background:#fff4}.vector-car .front{position:absolute;right:-1px;top:29px;width:35px;height:38px;border-radius:10px 22px 10px 8px;background:linear-gradient(180deg,#fff2,#0003)}.vector-car .grille{position:absolute;right:2px;top:53px;width:29px;height:13px;border-radius:4px;background:repeating-linear-gradient(90deg,#10151b 0 4px,#66717d 4px 6px)}.vector-car .lamp{position:absolute;top:40px;width:29px;height:11px;border-radius:10px;background:linear-gradient(90deg,#fff,#9feaff 45%,#ffffff55);box-shadow:0 0 14px #b9f4ff99}.vector-car .lamp.one{right:1px}.vector-car .lamp.two{left:1px}.vector-car .mirror{position:absolute;top:5px;width:13px;height:9px;border-radius:7px;background:#151c25;border:1px solid #fff4}.vector-car .mirror.one{left:82px}.vector-car .mirror.two{right:61px}.vector-car .wheel{position:absolute;bottom:-15px;width:49px;height:49px;border-radius:50%;background:#080b0f;border:5px solid #161c23;box-shadow:inset 0 0 0 4px #05070a,0 4px 6px #000}.vector-car .wheel i{position:absolute;inset:11px;border-radius:50%;background:radial-gradient(circle,#cbd3dc 0 15%,#4d5965 16% 31%,#151a20 32% 100%);box-shadow:inset 0 0 0 3px #8e9aa6}.vector-car .wheel.one{left:37px}.vector-car .wheel.two{right:37px}.vector-car .tail{position:absolute;bottom:17px;width:22px;height:9px;border-radius:8px;background:#ff3048;box-shadow:0 0 10px #ff304866}.vector-car .tail.one{left:3px}.vector-car .tail.two{right:3px}.vector-car .spoiler{position:absolute;right:14px;top:12px;width:55px;height:7px;border-radius:8px;background:#151b22;box-shadow:0 4px 0 #0008}.vector-car .plate{position:absolute;right:16px;bottom:9px;width:27px;height:7px;background:#dfe5e9;border-radius:2px}.vector-car.sport .body{height:67px;border-radius:22px 32px 14px 14px}.vector-car.sport .body:before{top:-31px}.vector-car.sport .wheel{width:46px;height:46px}.vector-car.suv .body{height:84px;border-radius:24px 29px 17px 17px}.vector-car.suv .body:before{top:-35px;height:61px}
 .result-car .vector-car{--scale:1.28}.slot-car .vector-car{--scale:.72}.car-scene .vector-car{--scale:.95}
@@ -196,6 +199,11 @@ body{background:radial-gradient(circle at 50% -10%,#172b46 0,#080d15 42%,#05080d
 @media(max-width:520px){#containers{grid-template-columns:1fr}.hud-strip{grid-template-columns:repeat(2,1fr)}.vector-car{transform:scale(.88)}.result-car .vector-car{--scale:1.08}}
 
 .feature-hub{margin-top:14px;padding:14px;border:1px solid #2b394c;border-radius:18px;background:linear-gradient(145deg,#121c29,#0a1018)}.feature-hub h3{margin:0 0 10px;font-size:17px}.feature-grid-wide{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.feature-grid-wide button{min-height:44px}.feature-chip{display:inline-flex;gap:6px;align-items:center;padding:5px 8px;border-radius:99px;background:#ffffff0b;border:1px solid #ffffff12;font-size:10px;color:#c7d2df}.hot-case{outline:2px solid #ffc83d55;box-shadow:0 0 25px #ffc83d18}.hot-badge{display:inline-block;margin-top:5px;padding:4px 7px;border-radius:99px;background:#ffc83d18;color:#ffd66b;border:1px solid #ffc83d33;font-size:9px;font-weight:1000}.upgrade-row,.task-row,.auction-row,.achievement-row{padding:11px;border:1px solid #2a3749;border-radius:13px;background:#0d151f;margin-bottom:8px}.upgrade-row{display:flex;align-items:center;justify-content:space-between;gap:10px}.small-btn{border:1px solid #3b4c62;background:#172331;color:#fff;border-radius:10px;padding:8px 10px;font-weight:900;cursor:pointer}.small-btn:disabled{opacity:.4}.progress{height:7px;background:#111923;border-radius:99px;overflow:hidden;margin-top:7px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#69a9ff,#b57cff);width:0}.reward-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.spin-reward{padding:16px;text-align:center;border:1px solid #2e4055;border-radius:15px;background:radial-gradient(circle at 50% 0,#2b3e56,#0c131c)}.auction-price{font-size:17px;font-weight:1000;color:#c8ffdc}.vip-box{padding:12px;border-radius:14px;background:linear-gradient(135deg,#17142a,#0d1119);border:1px solid #8b6cff33}.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.collection-item{padding:9px;text-align:center;border-radius:10px;border:1px solid #2b384a;background:#0d141d;font-size:11px}.collection-item.done{border-color:#4ce19a55;background:#123022}.streak{font-size:28px;font-weight:1000;color:#ffd86a}
+
+/* Premium lucky wheel */
+.wheel-modal{position:fixed;inset:0;z-index:260;background:#04070cf2;display:none;align-items:center;justify-content:center;padding:14px}.wheel-modal.show{display:flex}.wheel-card{width:min(520px,100%);background:linear-gradient(160deg,#182536,#090f17);border:1px solid #3c5068;border-radius:24px;padding:18px;text-align:center;box-shadow:0 30px 100px #000e}.wheel-stage{position:relative;width:min(320px,78vw);aspect-ratio:1;margin:12px auto 16px}.wheel-pointer{position:absolute;z-index:4;left:50%;top:-5px;transform:translateX(-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:32px solid #fff;filter:drop-shadow(0 4px 5px #000)}.wheel-disc{width:100%;height:100%;border-radius:50%;border:10px solid #c7a64a;box-shadow:0 0 0 5px #5b471f,0 18px 35px #000b;position:relative;overflow:hidden;transition:transform 4.8s cubic-bezier(.12,.76,.08,1);background:conic-gradient(#e34f62 0 60deg,#3f7ee8 60deg 120deg,#5bbd78 120deg 180deg,#f0ad45 180deg 240deg,#a46be8 240deg 300deg,#36b6b1 300deg 360deg)}.wheel-disc:after{content:"";position:absolute;inset:37%;border-radius:50%;background:radial-gradient(circle,#fff 0 8%,#d6b354 9% 25%,#131b27 26% 100%);box-shadow:0 0 0 5px #fff5}.wheel-labels{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:1000;color:#fff;text-shadow:0 2px 5px #000}.wheel-labels span{position:absolute;width:70px;height:28px;display:grid;place-items:center;font-size:12px;transform:none!important}.wheel-labels span:nth-child(1){top:28px;left:calc(50% - 35px)}.wheel-labels span:nth-child(2){top:76px;right:26px}.wheel-labels span:nth-child(3){bottom:76px;right:26px}.wheel-labels span:nth-child(4){bottom:28px;left:calc(50% - 35px)}.wheel-labels span:nth-child(5){bottom:76px;left:26px}.wheel-labels span:nth-child(6){top:76px;left:26px}.wheel-spin-btn{width:100%;padding:13px;border:0;border-radius:13px;background:linear-gradient(180deg,#ffd86b,#c99a29);color:#181108;font-weight:1000;font-size:15px;cursor:pointer}.wheel-spin-btn:disabled{opacity:.45}.wheel-float{position:fixed;right:14px;bottom:18px;z-index:170;width:62px;height:62px;border-radius:50%;border:2px solid #e7c45e;background:radial-gradient(circle at 35% 30%,#ffe998,#b98016);box-shadow:0 10px 30px #000a,0 0 24px #f3c64c55;color:#151008;font-size:28px;cursor:pointer;animation:wheelPulse 2.2s infinite}.wheel-float .wheel-cd{position:absolute;left:50%;transform:translateX(-50%);bottom:-17px;white-space:nowrap;font-size:9px;font-weight:1000;color:#fff;background:#0a1119dd;border:1px solid #ffffff22;border-radius:999px;padding:3px 6px}@keyframes wheelPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.sell-flash{animation:sellFlash .55s ease}@keyframes sellFlash{0%{transform:scale(1)}45%{transform:scale(1.05)}100%{transform:scale(1)}}
+.tune-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tune-card{padding:10px;border:1px solid #2a3749;border-radius:12px;background:#0c141e}.tune-card b{display:block}.tune-card .sub{margin:3px 0 7px}.tune-btn{width:100%;padding:8px;border-radius:9px;border:1px solid #42566d;background:#182636;color:#fff;font-weight:900;cursor:pointer}.tune-btn:disabled{opacity:.4}
 </style>
 </head>
 <body>
@@ -256,7 +264,7 @@ body{background:radial-gradient(circle at 50% -10%,#172b46 0,#080d15 42%,#05080d
   <div class="feature-box"><h3>Полезные функции</h3><div class="feature-grid"><button class="feature-btn" id="dailyBtn">🎁 Ежедневный бонус</button><button class="feature-btn" id="topBtn">🏆 Топ игроков</button><button class="feature-btn" id="historyBtn">📜 История переводов</button><button class="feature-btn" id="statsBtn">📊 Моя статистика</button></div></div>
   <div class="transfer-box"><h3>💸 Перевести монеты</h3><div class="sub">Введи @username игрока и любую сумму в пределах своего баланса.</div><input class="field" id="transferUser" placeholder="@username"><input class="field" id="transferAmount" type="number" min="1" inputmode="numeric" placeholder="Сумма ₽"><button class="transfer-btn" id="transferBtn">ПЕРЕВЕСТИ</button><div class="sub" style="margin-top:7px">В Telegram-режиме перевод отправляется на настоящий @username через сервер. Если сервер недоступен, игра не будет притворяться, что реальный перевод выполнен.</div></div>
 
-  <div class="feature-hub"><h3>🔥 Игровые функции</h3><div class="feature-grid-wide"><button class="feature-btn" id="tasksBtn">📋 Задания</button><button class="feature-btn" id="streakBtn">🔥 Серия дней</button><button class="feature-btn" id="spinBtn">🎡 Удачное колесо</button><button class="feature-btn" id="achievementsBtn">🏅 Достижения</button><button class="feature-btn" id="collectionBtn">📚 Коллекции</button><button class="feature-btn" id="upgradeBtn">🔧 Улучшения</button><button class="feature-btn" id="auctionBtn">🔨 Аукцион</button><button class="feature-btn" id="vipBtn">💎 VIP / Уровень</button></div></div>
+  <div class="feature-hub"><h3>🔥 Игровые функции</h3><div class="feature-grid-wide"><button class="feature-btn" id="tasksBtn">📋 Задания</button><button class="feature-btn" id="streakBtn">🔥 Серия дней</button><button class="feature-btn" id="spinBtn">🎁 Награды</button><button class="feature-btn" id="achievementsBtn">🏅 Достижения</button><button class="feature-btn" id="collectionBtn">📚 Коллекции</button><button class="feature-btn" id="upgradeBtn">🔧 Улучшения</button><button class="feature-btn" id="auctionBtn">🔨 Аукцион</button><button class="feature-btn" id="vipBtn">💎 VIP / Уровень</button></div></div>
   <div id="adminWrap" style="display:none">
     <button class="menu-item admin-item" id="adminToggle">👑 Админ-панель</button>
   </div>
@@ -335,29 +343,29 @@ const RARITIES={
 };
 
 const CARS=[
- {id:"l7",name:"Lada 2107",value:140000,rarity:"Обычная",c1:"#dfe5ea",c2:"#69737d"},
- {id:"v14",name:"ВАЗ 2114",value:140000,rarity:"Обычная",c1:"#ccd2d8",c2:"#606b77"},
- {id:"pri",name:"Lada Priora",value:180000,rarity:"Обычная",c1:"#adb8c4",c2:"#4b5561"},
- {id:"e36",name:"BMW E36",value:350000,rarity:"Необычная",c1:"#9fd1ff",c2:"#1d4e7c"},
- {id:"w24",name:"Mercedes W124",value:500000,rarity:"Необычная",c1:"#e6eaee",c2:"#5b6672"},
- {id:"e46",name:"BMW E46",value:1100000,rarity:"Необычная",c1:"#343b44",c2:"#07090c"},
- {id:"m3e",name:"BMW M3 E46",value:1100000,rarity:"Эпическая",c1:"#69b5ff",c2:"#154778"},
- {id:"gtr",name:"Nissan GT-R R35",value:2400000,rarity:"Эпическая",c1:"#ef5663",c2:"#671a23"},
- {id:"p911",name:"Porsche 911 Turbo",value:6000000,rarity:"Легендарная",c1:"#f5f5f5",c2:"#747984"},
- {id:"hur",name:"Lamborghini Huracán",value:11000000,rarity:"Легендарная",c1:"#ffe566",c2:"#966400"},
- {id:"chi",name:"Bugatti Chiron",value:24000000,rarity:"Мифическая",c1:"#75caff",c2:"#173f68"},
- {id:"jes",name:"Koenigsegg Jesko",value:36000000,rarity:"Мифическая",c1:"#e2e4e8",c2:"#4c535c"},
- {id:"sen",name:"McLaren Senna",value:39000000,rarity:"Мифическая",c1:"#ff813f",c2:"#5c1a0d"},
- {id:"urus",name:"Lamborghini Urus",value:32000000,rarity:"Мифическая",c1:"#15191e",c2:"#b9bfc8"},
- {id:"av",name:"Lamborghini Aventador",value:42000000,rarity:"Мифическая",c1:"#f1c83b",c2:"#6e4c00"},
- {id:"may",name:"Mercedes-Maybach S 680",value:40000000,rarity:"Мифическая",c1:"#25282e",c2:"#d5d9df"},
- {id:"rev",name:"Lamborghini Revuelto",value:47000000,rarity:"Мифическая",c1:"#5f6cff",c2:"#17205f"},
- {id:"sf90",name:"Ferrari SF90 Stradale",value:52000000,rarity:"Мифическая",c1:"#d72632",c2:"#4b070c"},
- {id:"765",name:"McLaren 765LT",value:38000000,rarity:"Мифическая",c1:"#ff7b36",c2:"#5d1f09"},
- {id:"812",name:"Ferrari 812 Superfast",value:45000000,rarity:"Мифическая",c1:"#f0e8df",c2:"#3f454e"},
- {id:"r8",name:"Audi R8 V10",value:29000000,rarity:"Мифическая",c1:"#a9b2bc",c2:"#20262d"},
- {id:"pan",name:"Porsche Panamera Turbo S",value:27000000,rarity:"Мифическая",c1:"#11151b",c2:"#68717d"},
- {id:"tay",name:"Porsche Taycan Turbo GT",value:30000000,rarity:"Мифическая",c1:"#d8dde4",c2:"#56616e"}
+ {id:"l7",name:"Lada 2107",value:260000,rarity:"Обычная",c1:"#dfe5ea",c2:"#69737d"},
+ {id:"v14",name:"ВАЗ 2114",value:290000,rarity:"Обычная",c1:"#ccd2d8",c2:"#606b77"},
+ {id:"pri",name:"Lada Priora",value:340000,rarity:"Обычная",c1:"#adb8c4",c2:"#4b5561"},
+ {id:"e36",name:"BMW E36",value:650000,rarity:"Необычная",c1:"#9fd1ff",c2:"#1d4e7c"},
+ {id:"w24",name:"Mercedes W124",value:850000,rarity:"Необычная",c1:"#e6eaee",c2:"#5b6672"},
+ {id:"e46",name:"BMW E46",value:1500000,rarity:"Необычная",c1:"#343b44",c2:"#07090c"},
+ {id:"m3e",name:"BMW M3 E46",value:3200000,rarity:"Эпическая",c1:"#69b5ff",c2:"#154778"},
+ {id:"gtr",name:"Nissan GT-R R35",value:5200000,rarity:"Эпическая",c1:"#ef5663",c2:"#671a23"},
+ {id:"p911",name:"Porsche 911 Turbo",value:9000000,rarity:"Легендарная",c1:"#f5f5f5",c2:"#747984"},
+ {id:"hur",name:"Lamborghini Huracán",value:14000000,rarity:"Легендарная",c1:"#ffe566",c2:"#966400"},
+ {id:"chi",name:"Bugatti Chiron",value:26000000,rarity:"Мифическая",c1:"#75caff",c2:"#173f68"},
+ {id:"jes",name:"Koenigsegg Jesko",value:42000000,rarity:"Мифическая",c1:"#e2e4e8",c2:"#4c535c"},
+ {id:"sen",name:"McLaren Senna",value:46000000,rarity:"Мифическая",c1:"#ff813f",c2:"#5c1a0d"},
+ {id:"urus",name:"Lamborghini Urus",value:38000000,rarity:"Мифическая",c1:"#15191e",c2:"#b9bfc8"},
+ {id:"av",name:"Lamborghini Aventador",value:50000000,rarity:"Мифическая",c1:"#f1c83b",c2:"#6e4c00"},
+ {id:"may",name:"Mercedes-Maybach S 680",value:47000000,rarity:"Мифическая",c1:"#25282e",c2:"#d5d9df"},
+ {id:"rev",name:"Lamborghini Revuelto",value:58000000,rarity:"Мифическая",c1:"#5f6cff",c2:"#17205f"},
+ {id:"sf90",name:"Ferrari SF90 Stradale",value:65000000,rarity:"Мифическая",c1:"#d72632",c2:"#4b070c"},
+ {id:"765",name:"McLaren 765LT",value:48000000,rarity:"Мифическая",c1:"#ff7b36",c2:"#5d1f09"},
+ {id:"812",name:"Ferrari 812 Superfast",value:56000000,rarity:"Мифическая",c1:"#f0e8df",c2:"#3f454e"},
+ {id:"r8",name:"Audi R8 V10",value:36000000,rarity:"Мифическая",c1:"#a9b2bc",c2:"#20262d"},
+ {id:"pan",name:"Porsche Panamera Turbo S",value:34000000,rarity:"Мифическая",c1:"#11151b",c2:"#68717d"},
+ {id:"tay",name:"Porsche Taycan Turbo GT",value:39000000,rarity:"Мифическая",c1:"#d8dde4",c2:"#56616e"}
 ];
 
 const COUNTRY_CASES={
@@ -491,11 +499,17 @@ function applyServerState(data){
   serverMode=true; serverStateLoaded=true; return true;
 }
 async function syncServer(){
-  // This build is deliberately self-contained. A broken/missing backend must never
-  // break opening, garage, selling, market, transfers or admin actions.
-  serverMode=false;
-  serverStateLoaded=false;
-  return false;
+  // Try to hydrate the current Telegram player from a real backend when available.
+  // If the backend is absent, keep the fully functional local mode.
+  try{
+    const d=await api('/api/state',{method:'GET'});
+    if(applyServerState(d)){saveAll();return true;}
+  }catch(e){}
+  try{
+    const d=await api('/api/me',{method:'GET'});
+    if(applyServerState(d)){saveAll();return true;}
+  }catch(e){}
+  serverMode=false;serverStateLoaded=false;return false;
 }
 async function serverSave(){ return; }
 
@@ -595,7 +609,7 @@ function effectiveWeights(weights){
   return weights.map((w,i)=>Math.max(0,Number(w)||0)*boost[i]);
 }
 function weightedRarity(weights){const boosted=effectiveWeights(weights);const total=boosted.reduce((a,b)=>a+b,0);let r=Math.random()*total;const rs=Object.keys(RARITIES);for(let i=0;i<boosted.length;i++){r-=boosted[i];if(r<=0)return rs[i]}return rs[0]}
-function pickCar(c){const rarity=weightedRarity(c.weights);const ids=Array.isArray(c.carIds)?c.carIds:null;const base=ids?CARS.filter(x=>ids.includes(x.id)):CARS;const pool=base.filter(x=>x.rarity===rarity);const fallback=CARS.filter(x=>x.rarity===rarity);const list=pool.length?pool:fallback;return list[Math.floor(Math.random()*list.length)]}
+function pickCar(c){const mega=readJson(STORAGE_KEY+'_mega_v1',{});const guaranteed=Number(mega.pity||0)>=9;if(guaranteed){const ids=Array.isArray(c.carIds)?CARS.filter(x=>c.carIds.includes(x.id)):CARS;const rare=ids.filter(x=>x.rarity==='Легендарная'||x.rarity==='Мифическая');const fallback=CARS.filter(x=>x.rarity==='Легендарная'||x.rarity==='Мифическая');const list=rare.length?rare:fallback;return list[Math.floor(Math.random()*list.length)]}const rarity=weightedRarity(c.weights);const base=Array.isArray(c.carIds)?CARS.filter(x=>c.carIds.includes(x.id)):CARS;const pool=base.filter(x=>x.rarity===rarity);const fallback=CARS.filter(x=>x.rarity===rarity);const list=pool.length?pool:fallback;return list[Math.floor(Math.random()*list.length)]}
 
 
 function localUsername(){
@@ -821,9 +835,19 @@ async function openContainer(index){
   if(skipBtn){skipBtn.style.display="inline-flex";skipBtn.disabled=false;skipBtn.textContent="⏭ Пропустить";}
   roulette.innerHTML=`<div class="case-opening opening"><div class="opening-label">ОТКРЫТИЕ КОНТЕЙНЕРА</div><div class="opening-box"><div class="opening-lock"></div></div></div>`;
   haptic("medium");startCaseOpenSound();
-  await new Promise(resolve=>{const timer=setTimeout(resolve,850);const check=()=>{if(skipOpeningRequested){clearTimeout(timer);resolve();}else setTimeout(check,25)};check();});
+  await new Promise(resolve=>{const timer=setTimeout(resolve,1250);const check=()=>{if(skipOpeningRequested){clearTimeout(timer);resolve();}else setTimeout(check,25)};check();});
 
-  state.balance-=openPrice; state.opened++; currentCar=pickCar(c); featureProgressOnOpen(currentCar); state.xp+=RARITIES[currentCar.rarity].xp;
+  state.balance-=openPrice; state.opened++;
+  // Гарант редкого дропа: на 10-м открытии без Легендарной/Мифической гарантируем редкость.
+  let megaOpen=readJson(STORAGE_KEY+'_mega_v1',{}); megaOpen.pity=Number(megaOpen.pity||0);
+  if(megaOpen.pity>=9){
+    const guaranteed=CARS.filter(x=>x.rarity==='Легендарная'||x.rarity==='Мифическая');
+    currentCar=guaranteed[Math.floor(Math.random()*Math.max(1,guaranteed.length))]||pickCar(c);
+  }else currentCar=pickCar(c);
+  featureProgressOnOpen(currentCar); state.xp+=RARITIES[currentCar.rarity].xp;
+  megaOpen.pity=(currentCar.rarity==='Легендарная'||currentCar.rarity==='Мифическая')?0:megaOpen.pity+1;
+  writeJson(STORAGE_KEY+'_mega_v1',megaOpen);
+  try{const pe=document.getElementById('megaPity');if(pe)pe.textContent=megaOpen.pity+' / 10';}catch(_){}
   const awarded=addCarToGarage(currentCar);
   if(!awarded){state.balance+=openPrice;state.opened=Math.max(0,state.opened-1);state.xp=Math.max(0,state.xp-RARITIES[currentCar.rarity].xp);spinning=false;modal.classList.remove("show");if(skipBtn)skipBtn.style.display="none";toast("Не удалось сохранить машину");return}
   currentCar=awarded; resultGarageUid=awarded._uid; saveAll();render();
@@ -832,7 +856,7 @@ async function openContainer(index){
     document.getElementById("modalSub").textContent="🎰 Машины прокручиваются…";
     await new Promise(r=>setTimeout(r,80));
     roulette.innerHTML=`<div class="pointer"></div><div class="rail" id="rail"></div>`;
-    const built=buildRoulette(currentCar),rail=built.rail,SPIN_DURATION=3200;
+    const built=buildRoulette(currentCar),rail=built.rail,SPIN_DURATION=4600;
     rail.style.transition="none";rail.style.transform="translate3d(0,0,0)";void rail.offsetWidth;
     const winnerSlot=rail.children[built.index],rr=roulette.getBoundingClientRect(),wr=winnerSlot.getBoundingClientRect();
     const target=Math.max(0,(wr.left+wr.width/2)-(rr.left+rr.width/2));
@@ -860,6 +884,8 @@ function startCaseOpenSound(){
  noiseBurst(.22,.055,1.16);
 }
 
+
+function sellSound(){if(!audioReady())return;osc(330,.16,'sine',.05);osc(494,.18,'sine',.045,.07);osc(659,.22,'triangle',.04,.15);clickSound(880,.05,.04,.24)}
 async function sellCarByUid(uid){
   if(!uid){toast("Машина не найдена");return false}
   const idx=findGarageIndexByUid(uid);
@@ -873,7 +899,7 @@ async function sellCarByUid(uid){
   state.balance+=payout;
   if(resultGarageUid===uid) resultGarageUid=null;
   if(inspectUid===uid) inspectUid=null;
-  bumpTask("sold",1);bumpTask("earned",payout); saveAll();render();toast(car.name+" продан за "+money(payout));haptic("success");
+  bumpTask("sold",1);bumpTask("earned",payout); saveAll();render();sellSound();toast(car.name+" продан за "+money(payout));haptic("success");
   return true;
 }
 async function sellCar(index){
@@ -887,8 +913,8 @@ const EXTRA_KEY=STORAGE_KEY+"_extra_v1";
 function extraLoad(){return readJson(EXTRA_KEY,{tasks:{},streak:0,lastDay:"",spinDay:"",ach:{},upgrades:{},auctions:[],hotDay:"",hotCase:-1})}
 let extra=extraLoad();
 function extraSave(){writeJson(EXTRA_KEY,extra)}
-function dayKey(){return new Date().toISOString().slice(0,10)}
-function yesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10)}
+function dayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function yesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
 function ensureDailyExtra(){const d=dayKey();if(extra.hotDay!==d){const cases=COUNTRY_CASES[currentCountry]?.cases||[];extra.hotDay=d;extra.hotCase=cases.length?Math.floor(Math.random()*cases.length):-1;extraSave()}}
 function currentHotCase(){ensureDailyExtra();return extra.hotCase}
 const TASKS=[
@@ -904,15 +930,27 @@ function bumpTask(kind,amount=1){const d=dayKey();extra.tasks[d]=extra.tasks[d]|
 function showTasks(){const d=dayKey();let a=extra.tasks[d]||{};const body=TASKS.map(t=>{const p=taskProgress(t),done=taskDone(t),pct=Math.min(100,p/t.goal*100);return `<div class="task-row"><div style="display:flex;justify-content:space-between;gap:8px"><b>${done?'✅ ':''}${t.name}</b><span>${p}/${t.goal}</span></div><div class="progress"><i style="width:${pct}%"></i></div><div class="sub" style="margin-top:6px">Награда: <b>${money(t.reward)}</b></div></div>`}).join('');openInfo('📋 Ежедневные задания',body,'Обновляются каждый день');}
 function updateStreak(){const d=dayKey();if(extra.lastDay===d)return;if(extra.lastDay===yesterdayKey())extra.streak=Number(extra.streak||0)+1;else extra.streak=1;extra.lastDay=d;const reward=Math.min(150000,10000*extra.streak);state.balance+=reward;state.xp+=100;extraSave();saveAll();toast(`🔥 Серия ${extra.streak} дней • +${money(reward)}`)}
 function showStreak(){updateStreak();openInfo('🔥 Серия входов',`<div class="spin-reward"><div class="streak">${extra.streak} 🔥</div><div class="sub">За сегодняшний вход уже начислено. Чем дольше серия, тем больше награда.</div></div><div class="info-row"><span>Награда сегодня</span><b>${money(Math.min(150000,10000*extra.streak))}</b></div>`,'Ежедневная награда')}
-function dailySpin(){if(extra.spinDay===dayKey()){toast('🎡 Колесо сегодня уже использовано');return}extra.spinDay=dayKey();const rewards=[5000,10000,25000,50000,75000,100000];const n=rewards[Math.floor(Math.random()*rewards.length)];state.balance+=n;state.xp+=40;extraSave();saveAll();toast('🎡 Колесо: +'+money(n));haptic('success');openInfo('🎡 Удачное колесо',`<div class="spin-reward"><div style="font-size:42px">🎉</div><h2>+${money(n)}</h2><div class="sub">Следующее вращение будет доступно завтра.</div></div>`)}
+function wheelCooldownMs(){return 3*60*60*1000}
+function wheelRemaining(){const t=Number(extra.spinAt||0);return Math.max(0,t-Date.now())}
+function wheelReady(){return wheelRemaining()<=0}
+function formatCooldown(ms){const total=Math.ceil(ms/1000),h=Math.floor(total/3600),m=Math.floor(total%3600/60),sec=total%60;return `${h}ч ${String(m).padStart(2,'0')}м ${String(sec).padStart(2,'0')}с`}
+function updateWheelCd(){const el=document.getElementById('wheelCd');if(!el)return;el.textContent=wheelReady()?'ГОТОВО':formatCooldown(wheelRemaining());const b=document.getElementById('wheelSpinNow');if(b){b.disabled=!wheelReady();b.textContent=wheelReady()?'ВРАЩАТЬ':'ДОСТУПНО ЧЕРЕЗ '+formatCooldown(wheelRemaining())}}
+function openWheel(){document.getElementById('wheelModal').classList.add('show');updateWheelCd()}
+function closeWheel(){document.getElementById('wheelModal').classList.remove('show')}
+function dailySpin(){openWheel()}
+function spinWheel(){if(!wheelReady()){toast('🎡 Следующее вращение через '+formatCooldown(wheelRemaining()));return}const rewards=[5000,10000,25000,50000,100000,250000];const index=Math.floor(Math.random()*rewards.length);const n=rewards[index];const disc=document.getElementById('wheelDisc');const turns=5+Math.floor(Math.random()*3);const target=turns*360+(360-index*60-30);disc.style.transform=`rotate(${target}deg)`;const btn=document.getElementById('wheelSpinNow');btn.disabled=true;btn.textContent='КОЛЕСО КРУТИТСЯ…';haptic('medium');setTimeout(()=>{state.balance+=n;state.xp+=60;extra.spinAt=Date.now()+wheelCooldownMs();extraSave();saveAll();render();toast('🎡 Колесо: +'+money(n));winSound();haptic('success');updateWheelCd();btn.textContent='ПОЛУЧЕНО';setTimeout(()=>btn.textContent='ДОСТУПНО ЧЕРЕЗ '+formatCooldown(wheelRemaining()),900)},4900)}
 function achievementData(){const unique=new Set(state.garage.map(x=>x.id)).size;return [
  ['first','🚗 Первый дроп',state.opened>=1,'Открой первый контейнер'],['ten','🔟 Десять открытий',state.opened>=10,'Открой 10 контейнеров'],['hundred','💯 Сто открытий',state.opened>=100,'Открой 100 контейнеров'],['collector','📚 Коллекционер',unique>=10,'Собери 10 разных машин'],['legend','🟠 Легенда',state.garage.some(x=>['Легендарная','Мифическая'].includes(x.rarity)),'Получи Легендарную или Мифическую'],['mythic','💎 Мифический дроп',state.garage.some(x=>x.rarity==='Мифическая'),'Получи Мифическую машину'],['rich','💰 Миллионер',state.balance>=1000000,'Достигни 1 000 000 ₽']
 ]}
 function showAchievements(){const rows=achievementData().map(a=>`<div class="achievement-row"><div style="display:flex;justify-content:space-between"><b>${a[2]?'🏆':'🔒'} ${a[1]}</b><span>${a[2]?'Выполнено':'В процессе'}</span></div><div class="sub" style="margin-top:4px">${a[3]}</div></div>`).join('');openInfo('🏅 Достижения',rows,'Коллекция наград')}
 function showCollection(){const ids=new Set(state.garage.map(x=>x.id));const body=`<div class="collection-grid">${CARS.map(c=>`<div class="collection-item ${ids.has(c.id)?'done':''}">${ids.has(c.id)?'✅':'🔒'}<br>${c.name}<br><span class="sub">${c.rarity}</span></div>`).join('')}</div><div class="info-row" style="margin-top:10px"><span>Собрано</span><b>${ids.size}/${CARS.length}</b></div>`;openInfo('📚 Коллекции',body,'Собирай уникальные машины')}
-function upgradeCost(car){const lvl=Number(car._upgrade||0);return Math.round((car.value||0)*(.15+.1*lvl))}
-function showUpgrades(){const body=state.garage.length?state.garage.map(c=>{const lvl=Number(c._upgrade||0),cost=upgradeCost(c);return `<div class="upgrade-row"><div><b>${c.name}</b><div class="sub">Ур. ${lvl} • цена продажи ${money(Math.round(c.value*(1+lvl*.12)))}</div></div><button class="small-btn" onclick="upgradeCar('${c._uid}')" ${state.balance<cost?'disabled':''}>+1 • ${money(cost)}</button></div>`}).join(''):'<div class="empty">В гараже пока нет машин.</div>';openInfo('🔧 Улучшения машин',body,'Каждый уровень повышает цену продажи на 12%')}
-function upgradeCar(uid){const c=state.garage.find(x=>x._uid===uid);if(!c)return;const cost=upgradeCost(c);if(state.balance<cost){toast('Недостаточно денег');return}state.balance-=cost;c._upgrade=Number(c._upgrade||0)+1;state.xp+=20;saveAll();render();showUpgrades();toast('🔧 Машина улучшена до уровня '+c._upgrade)}
+function upgradeCost(car){const lvl=Number(car._upgrade||0);return Math.min(5000000,Math.round((car.value||0)*(.12+.08*lvl)))}
+const TUNE_PARTS=[['engine','🚀 Двигатель',1.18],['gear','⚙️ КПП',1.14],['brakes','🛑 Тормоза',1.10],['tires','🛞 Резина',1.08],['aero','🪽 Аэродинамика',1.12],['interior','💺 Салон',1.06]];
+function tuneCost(car,part){const parts=car._tune||{};const lvl=Number(parts[part]||0);return Math.min(5000000,Math.round(250000*(1+lvl*.8)))}
+function showUpgrades(){const body=state.garage.length?state.garage.map(c=>{const lvl=Number(c._upgrade||0),cost=upgradeCost(c),parts=c._tune||{};const tune=TUNE_PARTS.map(([id,name,mult])=>{const pl=Number(parts[id]||0);const pc=tuneCost(c,id);return `<div class="tune-card"><b>${name} • ур. ${pl}</b><div class="sub">+${Math.round((mult-1)*100)}% к стоимости</div><button class="tune-btn" onclick="upgradePart('${c._uid}','${id}')" ${state.balance<pc?'disabled':''}>Улучшить • ${money(pc)}</button></div>`}).join('');return `<div class="upgrade-row"><div><b>${c.name}</b><div class="sub">Общий ур. ${lvl} • продажа ${money(Math.round(c.value*(1+lvl*.12)))}</div></div><button class="small-btn" onclick="upgradeCar('${c._uid}')" ${state.balance<cost?'disabled':''}>+1 • ${money(cost)}</button></div><div class="tune-grid" style="margin-bottom:12px">${tune}</div><button class="small-btn" style="width:100%;padding:11px;background:linear-gradient(180deg,#c99cff,#7146ba);border-color:#c5a1ff55" onclick="fullTune('${c._uid}')" ${state.balance<5000000?'disabled':''}>💎 FULL TUNE за 5 000 000 ₽</button>`}).join(''):'<div class="empty">В гараже пока нет машин.</div>';openInfo('🔧 Улучшения машин',body,'6 направлений тюнинга + FULL TUNE за 5 млн ₽')}
+function upgradeCar(uid){const c=state.garage.find(x=>x._uid===uid);if(!c)return;const cost=upgradeCost(c);if(state.balance<cost){toast('Недостаточно денег');return}state.balance-=cost;c._upgrade=Number(c._upgrade||0)+1;state.xp+=30;saveAll();render();showUpgrades();toast('🔧 Общий апгрейд: уровень '+c._upgrade);haptic('success')}
+function upgradePart(uid,part){const c=state.garage.find(x=>x._uid===uid);if(!c)return;c._tune=c._tune||{};const cost=tuneCost(c,part);if(state.balance<cost){toast('Недостаточно денег');return}state.balance-=cost;c._tune[part]=Number(c._tune[part]||0)+1;c._upgrade=Number(c._upgrade||0)+1;state.xp+=25;saveAll();render();showUpgrades();toast('🔧 '+part+' улучшен');haptic('success')}
+function fullTune(uid){const c=state.garage.find(x=>x._uid===uid);if(!c)return;if(state.balance<5000000){toast('Нужно 5 000 000 ₽');return}state.balance-=5000000;c._upgrade=Number(c._upgrade||0)+5;c._tune=c._tune||{};TUNE_PARTS.forEach(([id])=>c._tune[id]=Number(c._tune[id]||0)+1);state.xp+=300;saveAll();render();showUpgrades();toast('💎 FULL TUNE завершён за 5 млн ₽');haptic('success')}
 function vipLevel(){return Math.max(1,Math.floor((state.opened+state.xp/100)/25)+1)}
 function showVip(){const v=vipLevel(),next=v*25;openInfo('💎 VIP / Уровень',`<div class="vip-box"><h2 style="margin:0">VIP ${v}</h2><div class="sub">Открытия: ${state.opened} • XP: ${state.xp}</div><div class="progress"><i style="width:${Math.min(100,((state.opened+state.xp/100)%25)/25*100)}%"></i></div><div class="sub" style="margin-top:8px">До следующего VIP: ${Math.max(0,next-(state.opened+Math.floor(state.xp/100)))} очков</div></div><div class="info-row"><span>Бонус VIP</span><b>доступ к статусу и прогрессу</b></div>`,'Система прогресса')}
 function auctionData(){extra.auctions=Array.isArray(extra.auctions)?extra.auctions:[];return extra.auctions}
@@ -920,7 +958,7 @@ function listAuction(uid){const c=state.garage.find(x=>x._uid===uid);if(!c)retur
 function buyAuction(id){const a=auctionData().find(x=>x.id===id);if(!a)return;if(a.seller===localUsername()){toast('Это твой лот');return}if(state.balance<a.price){toast('Недостаточно денег');return}state.balance-=a.price;state.garage.push(Object.assign({},a.car,{_uid:makeUid()}));extra.auctions=auctionData().filter(x=>x.id!==id);extraSave();saveAll();render();showAuction();toast('🔨 Покупка выполнена');haptic('success')}
 function showAuction(){const mine=state.garage.slice(0,8).map(c=>`<div class="auction-row"><div><b>${c.name}</b><div class="sub">Твоя машина • ${c.rarity}</div></div><button class="small-btn" onclick="listAuction('${c._uid}')">Выставить</button></div>`).join('');const lots=auctionData().map(a=>`<div class="auction-row"><div><b>${a.car.name}</b><div class="sub">@${a.seller} • ${a.car.rarity}</div></div><div style="text-align:right"><div class="auction-price">${money(a.price)}</div><button class="small-btn" onclick="buyAuction('${a.id}')">Купить</button></div></div>`).join('');openInfo('🔨 Аукцион',`<h3>Твои машины</h3>${mine||'<div class="empty">Нет машин для выставления.</div>'}<h3 style="margin-top:15px">Лоты игроков</h3>${lots||'<div class="empty">Пока нет лотов.</div>'}`,'Локальный режим: реальные сделки требуют backend')}
 function showHotCase(){ensureDailyExtra();const c=COUNTRY_CASES[currentCountry]?.cases?.[extra.hotCase];if(c)toast('🔥 Горячий контейнер: '+c.name+' со скидкой 15% сегодня')}
-function featureProgressOnOpen(car){bumpTask('opened',1);if(['Легендарная','Мифическая'].includes(car.rarity))bumpTask('rare',1)}
+function featureProgressOnOpen(car){bumpTask('opened',1);if(['Легендарная','Мифическая'].includes(car.rarity))bumpTask('rare',1);try{const k=STORAGE_KEY+'_mega_v1';const m=readJson(k,{pity:0,seasonXP:0,missions:{},seasonClaimed:{},collections:{}});m.pity=['Легендарная','Мифическая'].includes(car.rarity)?0:Math.min(10,Number(m.pity||0)+1);m.seasonXP=Number(m.seasonXP||0)+25;const d=dayKey();if(!m.missions||m.missions.day!==d)m.missions={day:d,open:0,drift:0,race:0,claimed:{}};m.missions.open=Number(m.missions.open||0)+1;writeJson(k,m)}catch(e){}}
 
 function fillAdmin(){const s=document.getElementById("adminCar");s.innerHTML=CARS.map(c=>`<option value="${c.id}">${c.name} • ${money(c.value)}</option>`).join("");document.getElementById("adminStatus").textContent="👑 Владелец: @Otmar08 • доступ только по Telegram username"}
 function setupAdmin(){if(isAdmin()){document.getElementById("adminWrap").style.display="block";fillAdmin()}else document.getElementById("adminWrap").style.display="none"}
@@ -954,20 +992,22 @@ async function showStats(){
 async function transferCoins(){
   const username=document.getElementById("transferUser").value.trim().replace(/^@/,"");
   const amount=Math.floor(Number(document.getElementById("transferAmount").value)||0);
-  if(!/^[A-Za-z0-9_]{3,32}$/.test(username)){toast("Введи корректный @username");return}
-  if(username.toLowerCase()===localUsername()){toast("Нельзя перевести самому себе");return}
-  if(amount<1){toast("Введи сумму больше 0");return}
-  if(amount>state.balance){toast("Недостаточно средств");return}
+  if(!username){toast("Введи @username получателя");return}
+  if(amount<=0){toast("Сумма должна быть больше нуля");return}
+  if(amount>state.balance){toast("Недостаточно денег");return}
+  const ident=telegramIdentity();
   try{
-    const d=await api('/api/transfer',{method:'POST',body:JSON.stringify({username,to_username:username,amount,from_username:telegramIdentity().username||null,from_telegram_id:telegramIdentity().id||null})});
-    if(d&&d.state){applyServerState(d);saveAll();document.getElementById("transferAmount").value="";toast("💸 Реальный перевод выполнен: "+money(amount));render();haptic("success");return}
-    throw new Error("Сервер не подтвердил перевод");
+    const payload={username,to_username:username,recipient_username:username,to:username,amount,from_username:ident.username||null,from_telegram_id:ident.id||null,telegram_id:ident.id||null};
+    const d=await api('/api/transfer',{method:'POST',body:JSON.stringify(payload)});
+    const confirmed=!!(d&&(d.ok===true||d.success===true||d.status==='ok'||d.transaction_id||d.transfer_id||d.state));
+    if(!confirmed)throw new Error('server did not confirm');
+    if(d.state){applyServerState(d);}
+    else {state.balance-=amount;recordHistory('out',username,amount);saveAll();render();}
+    document.getElementById("transferAmount").value="";
+    toast("💸 Перевод подтверждён сервером: "+money(amount));haptic("success");
+    return;
   }catch(e){
-    const target=getLocalPlayer(username);
-    if(target){
-      state.balance-=amount;const targetState=stateFromCompact(target.state);targetState.balance+=amount;saveLocalPlayer(username,targetState);recordHistory("out",username,amount);saveAll();document.getElementById("transferAmount").value="";toast("💸 Локальный перевод выполнен: "+money(amount));render();haptic("success");return;
-    }
-    toast("❌ Реальный перевод не выполнен. Для перевода реальному Telegram-пользователю нужен рабочий /api/transfer на сервере.");
+    toast("❌ Сервер не подтвердил перевод. Деньги не списаны.");
   }
 }
 function adminTargetUsername(){
@@ -1008,7 +1048,7 @@ async function adminCall(path,payload,msg){
     else if(path.includes("set-xp"))st.xp=Math.max(0,Number(payload.amount)||0);
     else if(path.includes("reset-daily")){ if(username.toLowerCase()===localUsername())localStorage.removeItem(STORAGE_KEY+"_daily"); }
     else if(path.includes("give-car")){const car=getCar(payload.car_id);if(!car){toast("Машина не найдена");return}st.garage.push(Object.assign({},car,{_uid:makeUid()}));}
-    else if(path.includes("random-car")){const car=CARS[Math.floor(Math.random()*CARS.length)];st.garage.push(Object.assign({},car,{_uid:makeUid()}));}
+    else if(path.includes("random-car")){const rare=CARS.filter(car=>['Эпическая','Легендарная','Мифическая'].includes(car.rarity));const pool=rare.length?rare:CARS;const car=pool[Math.floor(Math.random()*pool.length)];st.garage.push(Object.assign({},car,{_uid:makeUid()}));}
     else if(path.includes("give-all-cars")){CARS.forEach(car=>st.garage.push(Object.assign({},car,{_uid:makeUid()})));}
     else if(path.includes("clear-garage"))st.garage=[];
     else if(path.includes("reset-player")){st.balance=200000;st.xp=0;st.opened=0;st.garage=[];}
@@ -1042,6 +1082,7 @@ document.getElementById("adminClearGarageBtn").onclick=()=>{const username=docum
 document.getElementById("adminResetBtn").onclick=()=>{const username=document.getElementById("adminUser").value.trim();if(confirm("Полностью сбросить игрока?"))adminCall('/api/admin/reset-player',{username},"Игрок сброшен")};
 document.getElementById("skipOpening").onclick=()=>{if(spinning){skipOpeningRequested=true;const b=document.getElementById("skipOpening");b.disabled=true;b.textContent="⏭ Пропускаем…";haptic("light")}};document.getElementById("closeModal").onclick=closeModal;document.getElementById("modal").onclick=e=>{if(e.target.id==="modal"&&!spinning)closeModal()};document.getElementById("closeInfo").onclick=closeInfo;document.getElementById("infoModal").onclick=e=>{if(e.target.id==="infoModal")closeInfo()};
 
+document.getElementById('wheelFloat').onclick=openWheel;document.getElementById('wheelClose').onclick=closeWheel;document.getElementById('wheelModal').onclick=e=>{if(e.target.id==='wheelModal')closeWheel()};document.getElementById('wheelSpinNow').onclick=spinWheel;setInterval(updateWheelCd,1000);
 document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('streakBtn').onclick=showStreak;document.getElementById('spinBtn').onclick=dailySpin;document.getElementById('achievementsBtn').onclick=showAchievements;document.getElementById('collectionBtn').onclick=showCollection;document.getElementById('upgradeBtn').onclick=showUpgrades;document.getElementById('auctionBtn').onclick=showAuction;document.getElementById('vipBtn').onclick=showVip;
 
 (async function boot(){
@@ -1052,6 +1093,108 @@ document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('s
  syncCurrentPlayerRecord();
  serverMode=false;
  render();setupAdmin();
+})();
+</script>
+<button class="wheel-float" id="wheelFloat" aria-label="Колесо удачи">🎡<span class="wheel-cd" id="wheelCd">ГОТОВО</span></button>
+<div class="wheel-modal" id="wheelModal"><div class="wheel-card"><div style="display:flex;justify-content:space-between;align-items:center"><div><h2 style="margin:0">🎡 Колесо удачи</h2><div class="sub" id="wheelSub">1 вращение раз в 3 часа</div></div><button class="xbtn" id="wheelClose">✕</button></div><div class="wheel-stage"><div class="wheel-pointer"></div><div class="wheel-disc" id="wheelDisc"><div class="wheel-labels"><span style="transform:rotate(0deg) translateY(0);">5K</span><span style="transform:rotate(60deg);">10K</span><span style="transform:rotate(120deg);">25K</span><span style="transform:rotate(180deg);">50K</span><span style="transform:rotate(240deg);">100K</span><span style="transform:rotate(300deg);">250K</span></div></div></div><button class="wheel-spin-btn" id="wheelSpinNow">ВРАЩАТЬ</button></div></div>
+
+<style id="megaFeaturesStyle">
+#megaFeaturesBtn{position:fixed;left:16px;bottom:18px;z-index:9998;border:1px solid #5d7cff;background:linear-gradient(135deg,#182653,#314eb0);color:#fff;border-radius:16px;padding:12px 16px;font-weight:900;box-shadow:0 10px 30px #0008;cursor:pointer}
+#megaFeaturesModal{position:fixed;inset:0;background:#05070dcc;display:none;align-items:center;justify-content:center;z-index:9997;padding:14px}
+#megaFeaturesModal.show{display:flex}
+.mega-card{width:min(980px,100%);max-height:92vh;overflow:auto;background:linear-gradient(180deg,#111827,#0a0f1d);border:1px solid #263554;border-radius:24px;padding:18px;color:#eef3ff;box-shadow:0 25px 80px #000b}
+.mega-head{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:-18px;background:#101625f2;padding:4px 0 14px;z-index:2}
+.mega-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.mega-tile{background:#151e31;border:1px solid #2a3958;border-radius:18px;padding:14px}.mega-tile h3{margin:0 0 7px}.mega-tile p{color:#9eacc6;font-size:13px;min-height:36px}.mega-btn{border:0;border-radius:12px;padding:10px 12px;background:#263a68;color:#fff;font-weight:800;cursor:pointer}.mega-btn:hover{filter:brightness(1.15)}.mega-btn.gold{background:#72561a}.mega-btn.green{background:#1e684a}.mega-btn.red{background:#723039}.mega-small{font-size:12px;color:#8290aa}.mega-row{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #24304a;padding:10px 0}.mega-input{width:100%;box-sizing:border-box;background:#0b1120;border:1px solid #334466;color:#fff;border-radius:10px;padding:10px;margin:5px 0}.mega-select{background:#0b1120;border:1px solid #334466;color:#fff;border-radius:10px;padding:10px;width:100%}.mega-bar{height:8px;background:#202b42;border-radius:10px;overflow:hidden}.mega-bar i{display:block;height:100%;background:#6d8dff}.mega-stat{font-size:20px;font-weight:900}.mega-muted{color:#9ba8bf}.mega-pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#202d49;color:#bcd0ff;font-size:11px;font-weight:800}
+</style>
+
+<button id="megaFeaturesBtn">🚀 Все режимы</button>
+<div id="megaFeaturesModal"><div class="mega-card">
+ <div class="mega-head"><div><h2 style="margin:0">🚀 Расширенная игра</h2><div class="mega-small">Новые режимы, прогресс, коллекции и события</div></div><button class="xbtn" id="megaClose">✕</button></div>
+ <div class="mega-grid">
+  <div class="mega-tile"><h3>🏁 Гонки</h3><p>Одиночные заезды и награды за победы.</p><button class="mega-btn" onclick="megaRace()">Начать гонку</button></div>
+  <div class="mega-tile"><h3>💨 Дрифт</h3><p>Набирай очки, делай комбо и побивай рекорд.</p><button class="mega-btn" onclick="megaDrift()">Начать дрифт</button></div>
+  <div class="mega-tile"><h3>🔧 Тюнинг</h3><p>Улучшай двигатель, турбо, тормоза и подвеску.</p><button class="mega-btn" onclick="megaTune()">Открыть тюнинг</button></div>
+  <div class="mega-tile"><h3>🎁 Гарант дропа</h3><p>После серии неудачных открытий редкий дроп гарантируется.</p><div class="mega-stat" id="megaPity">0 / 10</div><button class="mega-btn" onclick="megaPityInfo()">Подробнее</button></div>
+  <div class="mega-tile"><h3>🔄 Обмен</h3><p>Передавай машины другому игроку в локальном профиле.</p><button class="mega-btn" onclick="megaTrade()">Обменяться</button></div>
+  <div class="mega-tile"><h3>📚 Коллекции</h3><p>Собирай тематические наборы и получай бонусы.</p><button class="mega-btn" onclick="megaCollections()">Открыть коллекции</button></div>
+  <div class="mega-tile"><h3>🏆 Сезон</h3><p>Сезонный XP-прогресс с бесплатными наградами.</p><button class="mega-btn" onclick="megaSeason()">Открыть сезон</button></div>
+  <div class="mega-tile"><h3>🎯 Миссии</h3><p>Ежедневные и секретные задания с наградами.</p><button class="mega-btn" onclick="megaMissions()">Мои миссии</button></div>
+  <div class="mega-tile"><h3>💎 Лимитки</h3><p>Временные машины и событие дня.</p><button class="mega-btn gold" onclick="megaLimited()">Событие</button></div>
+  <div class="mega-tile"><h3>🎰 Джекпот</h3><p>Рискни монетами и попробуй сорвать большой выигрыш.</p><button class="mega-btn gold" onclick="megaJackpot()">Испытать удачу</button></div>
+  <div class="mega-tile"><h3>🧪 Крафт</h3><p>Объединяй дубликаты машин для повышения редкости.</p><button class="mega-btn" onclick="megaCraft()">Открыть крафт</button></div>
+  <div class="mega-tile"><h3>📊 Рейтинги</h3><p>Сравнивай открытия, богатство, коллекцию и дрифт.</p><button class="mega-btn" onclick="megaRatings()">Таблица лидеров</button></div>
+
+  <div class="mega-tile"><h3>🏎️ Чемпионат</h3><p>Выбирай тип гонки: спринт, кольцо или тайм-триал. Получай рейтинг и награды.</p><button class="mega-btn" onclick="megaChampionship()">Открыть чемпионат</button></div>
+  <div class="mega-tile"><h3>🔥 Дрифт-комбо</h3><p>Цепочки комбо повышают множитель и награду за один заезд.</p><button class="mega-btn" onclick="megaDriftCombo()">Начать комбо</button></div>
+  <div class="mega-tile"><h3>🛠️ Детальный тюнинг</h3><p>Отдельно прокачивай двигатель, турбо, тормоза, подвеску и сцепление.</p><button class="mega-btn" onclick="megaDetailedTune()">Настроить</button></div>
+  <div class="mega-tile"><h3>🕵️ Секретные задания</h3><p>Скрытые условия открывают дополнительные деньги, XP и редкие машины.</p><button class="mega-btn" onclick="megaSecrets()">Проверить</button></div>
+  <div class="mega-tile"><h3>🥇 Турнир недели</h3><p>Соревнуйся по гонкам, дрифту и стоимости гаража.</p><button class="mega-btn" onclick="megaTournament()">Турнир</button></div>
+  <div class="mega-tile"><h3>📈 Карточка машины</h3><p>Смотри скорость, мощность, управляемость и уровень конкретной машины.</p><button class="mega-btn" onclick="megaCarStats()">Открыть</button></div>
+ </div>
+</div></div>
+
+<script id="megaFeaturesScript">
+(function(){
+ const MEGA_KEY=STORAGE_KEY+"_mega_v1";
+ let mega=readJson(MEGA_KEY,{pity:0,raceWins:0,raceRuns:0,driftBest:0,driftTotal:0,seasonXP:0,seasonClaimed:{},missions:{},limitedClaimed:false,limitedDay:'',collections:{},crafts:0,jackpotWins:0});
+ function reloadMega(){const fresh=readJson(MEGA_KEY,{});Object.assign(mega,fresh);mega.missions=mega.missions||{};mega.seasonClaimed=mega.seasonClaimed||{};mega.collections=mega.collections||{};return mega}
+ function ms(){writeJson(MEGA_KEY,mega)}
+ function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+ function modal(title,body){openInfo(title,body,'Расширенные режимы')}
+ function ownedCars(){return Array.isArray(state.garage)?state.garage:[]}
+ function pickOwned(){return ownedCars()[0]||null}
+ function carPower(c){return 50+Number(c&&c._upgrade||0)*7+Number(c&&c._tune&&c._tune.engine||0)*10+Number(c&&c._tune&&c._tune.turbo||0)*14}
+ function updatePity(){const e=document.getElementById('megaPity');if(e)e.textContent=mega.pity+' / 10'}
+ window.megaPityInfo=function(){reloadMega();updatePity();modal('🎁 Гарант редкости',`<div class="mega-row"><span>Серия без гарантированного дропа</span><b>${mega.pity} / 10</b></div><div class="mega-bar"><i style="width:${Math.min(100,mega.pity*10)}%"></i></div><p class="mega-muted">Каждое открытие без Легендарной/Мифической машины увеличивает счётчик. На 10-м открытии гарантируется минимум Легендарная.</p>`) }
+ window.megaRace=function(){reloadMega();const c=pickOwned();if(!c){toast('Сначала получи хотя бы одну машину');return}const power=carPower(c),chance=Math.min(.9,.35+power/300);const win=Math.random()<chance;mega.raceRuns++;if(win){mega.raceWins++;const reward=Math.round(50000+power*2500+Math.random()*150000);state.balance+=reward;state.xp+=80;toast('🏁 Победа! +'+money(reward))}else{state.xp+=25;toast('🏁 Ты проиграл, но получил +25 XP')}ms();saveAll();render();modal('🏁 Результат гонки',`<div class="mega-stat">${win?'ПОБЕДА 🏆':'ПОРАЖЕНИЕ'}</div><p>Машина: <b>${esc(c.name)}</b><br>Сила: <b>${power}</b><br>Побед: <b>${mega.raceWins}</b> / ${mega.raceRuns}</p>`)}
+ window.megaDrift=function(){reloadMega();const c=pickOwned();if(!c){toast('Нужна машина в гараже');return}const power=carPower(c);const score=Math.floor(500+Math.random()*3500+power*15);mega.driftTotal+=score;mega.driftBest=Math.max(mega.driftBest,score);const reward=Math.floor(score*8);state.balance+=reward;state.xp+=Math.floor(score/20);ms();saveAll();render();modal('💨 Дрифт заезд',`<div class="mega-stat">${score.toLocaleString('ru-RU')} очков</div><p>Рекорд: <b>${mega.driftBest.toLocaleString('ru-RU')}</b><br>Комбо: <b>x${(1+Math.floor(score/1000)).toFixed(0)}</b><br>Награда: <b>${money(reward)}</b></p>`)}
+ window.megaTune=function(){reloadMega();const cars=ownedCars().slice(0,20);if(!cars.length){toast('В гараже нет машин');return}modal('🔧 Тюнинг',cars.map(c=>`<div class="mega-row"><div><b>${esc(c.name)}</b><div class="mega-small">Сила ${carPower(c)} • апгрейд ${c._upgrade||0}</div></div><button class="mega-btn" onclick="megaUpgrade('${esc(c._uid)}')">+${money(100000+Number(c._upgrade||0)*50000)}</button></div>`).join(''))}
+ window.megaUpgrade=function(uid){const c=ownedCars().find(x=>x._uid===uid);if(!c)return;const cost=100000+Number(c._upgrade||0)*50000;if(state.balance<cost){toast('Недостаточно денег');return}state.balance-=cost;c._upgrade=Number(c._upgrade||0)+1;c._tune=c._tune||{};c._tune.engine=Number(c._tune.engine||0)+1;state.xp+=35;saveAll();render();toast('🔧 Машина улучшена');megaTune()}
+ window.megaTrade=function(){reloadMega();const cars=ownedCars();if(!cars.length){toast('Нет машин для обмена');return}const options=cars.map(c=>`<option value="${esc(c._uid)}">${esc(c.name)} • ${esc(c.rarity)}</option>`).join('');modal('🔄 Обмен',`<input id="megaTradeUser" class="mega-input" placeholder="username получателя"><select id="megaTradeCar" class="mega-select">${options}</select><br><button class="mega-btn green" onclick="megaDoTrade()">Передать машину</button><p class="mega-small">В HTML-версии обмен работает через локальные профили на одном устройстве.</p>`)}
+ window.megaDoTrade=function(){reloadMega();const user=document.getElementById('megaTradeUser').value.trim().replace(/^@/,'').toLowerCase();const uid=document.getElementById('megaTradeCar').value;if(!user||user===localUsername()){toast('Укажи другого игрока');return}addPlayerIfMissing(user);const players=localPlayers();const target=players[user];const c=ownedCars().find(x=>x._uid===uid);if(!c||!target){toast('Игрок или машина не найдены');return}const idx=state.garage.findIndex(x=>x._uid===uid);if(idx<0){toast('Машина уже отсутствует в гараже');return}state.garage.splice(idx,1);target.state=target.state||{b:0,x:0,o:0,g:[]};target.state.g=Array.isArray(target.state.g)?target.state.g:[];target.state.g.push({id:c.id,uid:makeUid()});players[user]=target;writeJson(LOCAL_PLAYERS_KEY,players);saveAll();render();toast('🔄 Машина передана @'+user+' • получатель увидит её при загрузке своего локального профиля')}
+ window.megaCollections=function(){reloadMega();const sets=[['🚗 Немецкая классика',['e36','w24','e46'],150000],['🏎️ Суперкары',['gtr','p911','hur'],500000],['💎 Мифический гараж',['chi','jes','sen'],1500000]];const html=sets.map(set=>{const have=set[1].filter(id=>ownedCars().some(c=>c.id===id)).length;const done=have===set[1].length;return `<div class="mega-row"><div><b>${set[0]}</b><div class="mega-small">${have}/${set[1].length} машин</div><div class="mega-bar"><i style="width:${have/set[1].length*100}%"></i></div></div><button class="mega-btn ${done?'green':''}" ${done&&mega.collections[set[0]]?'disabled':''} onclick="megaClaimCollection('${esc(set[0])}',${set[2]})">${mega.collections[set[0]]?'Получено':done?'Забрать '+money(set[2]):'Собрать'}</button></div>`}).join('');modal('📚 Коллекции',html)}
+ window.megaClaimCollection=function(name,reward){const sets={'🚗 Немецкая классика':['e36','w24','e46'],'🏎️ Суперкары':['gtr','p911','hur'],'💎 Мифический гараж':['chi','jes','sen']};if(mega.collections[name])return;const have=sets[name].filter(id=>ownedCars().some(c=>c.id===id)).length;if(have<sets[name].length){toast('Коллекция ещё не собрана');return}mega.collections[name]=true;state.balance+=reward;state.xp+=150;ms();saveAll();render();toast('📚 Коллекция завершена: +'+money(reward));megaCollections()}
+ window.megaSeason=function(){reloadMega();const xp=mega.seasonXP;const levels=[{n:1,x:0,r:50000},{n:2,x:250,r:100000},{n:3,x:600,r:250000},{n:4,x:1000,r:500000},{n:5,x:1600,r:1000000},{n:6,x:2500,r:2500000}];modal('🏆 Сезон «Уличная Лига»',levels.map(l=>{const done=xp>=l.x,claimed=mega.seasonClaimed[l.n];return `<div class="mega-row"><span><b>Уровень ${l.n}</b><div class="mega-small">${l.x} сезонного XP • награда ${money(l.r)}</div></span><button class="mega-btn ${done?'green':''}" onclick="megaClaimSeason(${l.n},${l.x},${l.r})">${claimed?'Получено':done?'Забрать':'Закрыто'}</button></div>`}).join('')+`<p class="mega-muted">Сезонный XP начисляется за открытия, гонки, дрифт и задания.</p>`)}
+ window.megaClaimSeason=function(n,need,reward){if(mega.seasonClaimed[n]||mega.seasonXP<need){toast('Уровень ещё не доступен');return}mega.seasonClaimed[n]=true;state.balance+=reward;state.xp+=100;ms();saveAll();render();toast('🏆 Сезонная награда: +'+money(reward));megaSeason()}
+ window.megaMissions=function(){reloadMega();const d=dayKey();if(mega.missions.day!==d)mega.missions={day:d,open:0,drift:0,race:0,claimed:{}};const list=[['open','Открой 3 контейнера',mega.missions.open,3,30000],['drift','Набери 5000 очков дрифта',mega.missions.drift,5000,50000],['race','Проведи 3 гонки',mega.missions.race,3,70000]];modal('🎯 Миссии',list.map(x=>`<div class="mega-row"><span><b>${x[1]}</b><div class="mega-small">${Math.min(x[2],x[3])}/${x[3]} • награда ${money(x[4])}</div></span><button class="mega-btn" onclick="megaClaimMission('${x[0]}',${x[3]},${x[4]})">${mega.missions.claimed[x[0]]?'Получено':x[2]>=x[3]?'Забрать':'В процессе'}</button></div>`).join(''))}
+ window.megaClaimMission=function(id,goal,reward){if(mega.missions.claimed[id])return;if((mega.missions[id]||0)<goal){toast('Миссия ещё не выполнена');return}mega.missions.claimed[id]=true;state.balance+=reward;mega.seasonXP+=100;state.xp+=50;ms();saveAll();render();toast('🎯 Миссия выполнена: +'+money(reward));megaMissions()}
+ window.megaLimited=function(){reloadMega();const today=dayKey();const limited=CARS.find(c=>c.id==='rev')||CARS[CARS.length-1];const can=mega.limitedDay!==today;modal('💎 Временное событие',`<div class="mega-tile"><h3>🔥 Машина дня</h3><p><b>${esc(limited.name)}</b><br>Сегодня шанс получить её повышен. Первое событие дня даёт дополнительный бонус.</p><button class="mega-btn gold" onclick="megaClaimLimited()">${can?'Получить бонус':'Уже получено сегодня'}</button></div>`)}
+ window.megaClaimLimited=function(){if(mega.limitedDay===dayKey()){toast('Бонус уже получен сегодня');return}const reward=250000;state.balance+=reward;state.xp+=120;mega.limitedDay=dayKey();mega.limitedClaimed=true;mega.seasonXP+=150;ms();saveAll();render();toast('💎 Событие: +'+money(reward));megaLimited()}
+ window.megaJackpot=function(){reloadMega();const cost=100000;if(state.balance<cost){toast('Для джекпота нужно '+money(cost));return}state.balance-=cost;const roll=Math.random();let reward=0;if(roll<.02)reward=10000000;else if(roll<.10)reward=2000000;else if(roll<.35)reward=500000;else if(roll<.65)reward=150000;state.balance+=reward;if(reward>=2000000)mega.jackpotWins++;state.xp+=reward?30:5;ms();saveAll();render();modal('🎰 Джекпот',`<div class="mega-stat">${reward?('+'+money(reward)):'Не повезло 😅'}</div><p>Ставка: ${money(cost)}<br>Шанс на главный джекпот: 2%</p>`)}
+ window.megaCraft=function(){reloadMega();const counts={};ownedCars().forEach(c=>counts[c.id]=(counts[c.id]||0)+1);const rows=Object.entries(counts).filter(([id,n])=>n>=3).map(([id,n])=>{const c=CARS.find(x=>x.id===id);return `<div class="mega-row"><span><b>${esc(c?c.name:id)}</b><div class="mega-small">Дубликатов: ${n} • 3 → 1 улучшенная машина</div></span><button class="mega-btn" onclick="megaDoCraft('${id}')">Объединить</button></div>`}).join('');modal('🧪 Крафт дубликатов',rows||'<div class="mega-muted">Нужно минимум 3 одинаковые машины.</div>')}
+ window.megaDoCraft=function(id){const arr=ownedCars().filter(c=>c.id===id);if(arr.length<3){toast('Нужно 3 одинаковые машины');return}const ids=new Set(arr.slice(0,3).map(c=>c._uid));state.garage=ownedCars().filter(c=>!ids.has(c._uid));const base=CARS.find(c=>c.id===id);const rarityIndex=['Обычная','Необычная','Эпическая','Легендарная','Мифическая'].indexOf(base.rarity);const next=CARS.filter(c=>['Обычная','Необычная','Эпическая','Легендарная','Мифическая'][Math.min(4,rarityIndex+1)]===c.rarity)[Math.floor(Math.random()*Math.max(1,CARS.filter(c=>c.rarity===['Обычная','Необычная','Эпическая','Легендарная','Мифическая'][Math.min(4,rarityIndex+1)]).length))]||base;addCarToGarage(next);mega.crafts++;state.xp+=100;mega.seasonXP+=100;ms();saveAll();render();toast('🧪 Крафт: '+next.name);megaCraft()}
+ window.megaRatings=function(){reloadMega();const players=Object.values(localPlayers());const rows=players.sort((a,b)=>(b.state.b||0)-(a.state.b||0)).slice(0,10).map((p,i)=>`<div class="mega-row"><span>#${i+1} <b>@${esc(p.username)}</b></span><b>${money(p.state.b||0)}</b></div>`).join('');modal('📊 Рейтинги',`<div class="mega-row"><span>Твои победы</span><b>${mega.raceWins}</b></div><div class="mega-row"><span>Лучший дрифт</span><b>${mega.driftBest.toLocaleString('ru-RU')}</b></div><h3>Богатейшие игроки</h3>${rows||'<div class="mega-muted">Пока только твой профиль.</div>'}`)}
+ const oldRace=window.megaRace,oldDrift=window.megaDrift;
+ const origRace=window.megaRace; window.megaRace=function(){const before=mega.raceRuns;origRace();if(mega.raceRuns>before){mega.missions.day=dayKey();mega.missions.race=(mega.missions.race||0)+1;mega.seasonXP+=40;ms()}}
+ const origDrift=window.megaDrift; window.megaDrift=function(){const before=mega.driftTotal;origDrift();if(mega.driftTotal>before){mega.missions.day=dayKey();mega.missions.drift=(mega.missions.drift||0)+(mega.driftTotal-before);mega.seasonXP+=40;ms()}}
+ document.getElementById('megaFeaturesBtn').onclick=()=>{updatePity();document.getElementById('megaFeaturesModal').classList.add('show')};document.getElementById('megaClose').onclick=()=>document.getElementById('megaFeaturesModal').classList.remove('show');document.getElementById('megaFeaturesModal').onclick=e=>{if(e.target.id==='megaFeaturesModal')document.getElementById('megaFeaturesModal').classList.remove('show')};
+ reloadMega();updatePity();
+// ===== Feature Pack 2 =====
+(function(){
+ const FP=STORAGE_KEY+'_featurepack2_v1';
+ let fp=readJson(FP,{rating:1000,race:{sprint:0,circuit:0,time:0},comboBest:0,week:{},secrets:{},tournament:{}});
+ function save(){writeJson(FP,fp)}
+ function esc2(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+ function fmodal(t,b){openInfo(t,b,'Новые игровые функции')}
+ function cars(){return Array.isArray(state.garage)?state.garage:[]}
+ function power(c){return 50+Number(c&&c._upgrade||0)*7+Object.values(c&&c._tune||{}).reduce((a,v)=>a+Number(v||0)*8,0)}
+ function weekKey(){const d=new Date();const one=new Date(d.getFullYear(),0,1);return String(Math.ceil((((d-one)/86400000)+one.getDay()+1)/7))+'-'+d.getFullYear()}
+ window.megaChampionship=function(){
+  const types=[['sprint','🏁 Спринт','короткая гонка',45000],['circuit','🏎️ Кольцо','несколько кругов',75000],['time','⏱️ Тайм-триал','борьба со временем',100000]];
+  fmodal('🏆 Чемпионат',types.map(x=>`<div class="mega-row"><span><b>${x[1]}</b><div class="mega-small">${x[2]} • базовая награда ${money(x[3])}</div></span><button class="mega-btn" onclick="megaRaceType('${x[0]}',${x[3]})">Старт</button></div>`).join('')+`<p class="mega-muted">Рейтинг: <b>${fp.rating}</b>. Победа повышает рейтинг, поражение немного снижает.</p>`);
+ }
+ window.megaRaceType=function(type,base){const c=cars()[0];if(!c){toast('Сначала получи машину');return}const p=power(c),chance=Math.min(.92,.32+p/420+(type==='time'?.08:0));const win=Math.random()<chance;fp.race[type]=(fp.race[type]||0)+1;fp.rating=Math.max(500,fp.rating+(win?18:-10));let reward=win?Math.round(base+p*1400+Math.random()*base):Math.round(base*.12);state.balance+=reward;state.xp+=win?70:20;save();saveAll();render();fmodal('🏁 Результат',`<div class="mega-stat">${win?'ПОБЕДА 🏆':'ПОРАЖЕНИЕ'}</div><p>${esc2(c.name)} • сила ${p}<br>Рейтинг: <b>${fp.rating}</b><br>${win?'Награда':'Компенсация'}: <b>${money(reward)}</b></p>`)}
+ window.megaDriftCombo=function(){const c=cars()[0];if(!c){toast('Нужна машина');return}let combo=1,score=0;for(let i=0;i<5;i++){const ok=Math.random()<(.55+Math.min(.3,power(c)/500));if(!ok){combo=1;break}score+=Math.floor((700+Math.random()*1200)*combo);combo++;}const mult=Math.max(1,combo-1);fp.comboBest=Math.max(fp.comboBest,score);const reward=Math.floor(score*(1+mult*.35));state.balance+=reward;state.xp+=Math.floor(score/30);save();saveAll();render();fmodal('🔥 Дрифт-комбо',`<div class="mega-stat">${score.toLocaleString('ru-RU')} очков</div><p>Максимальное комбо: <b>x${mult}</b><br>Рекорд комбо: <b>${fp.comboBest.toLocaleString('ru-RU')}</b><br>Награда: <b>${money(reward)}</b></p>`)}
+ window.megaDetailedTune=function(){const list=cars().slice(0,15);if(!list.length){toast('Гараж пуст');return}fmodal('🛠️ Детальный тюнинг',list.map(c=>{c._tune=c._tune||{};return `<div class="mega-row"><div><b>${esc2(c.name)}</b><div class="mega-small">Сила ${power(c)}</div></div><button class="mega-btn" onclick="megaTuneParts('${esc2(c._uid)}')">Детали</button></div>`}).join(''))}
+ window.megaTuneParts=function(uid){const c=cars().find(x=>x._uid===uid);if(!c)return;c._tune=c._tune||{};const parts=[['engine','Двигатель'],['turbo','Турбо'],['brakes','Тормоза'],['suspension','Подвеска'],['grip','Сцепление']];fmodal('🔧 '+esc2(c.name),parts.map(([id,n])=>{const lv=Number(c._tune[id]||0),cost=75000+lv*60000;return `<div class="mega-row"><span><b>${n}</b><div class="mega-small">Уровень ${lv} • стоимость ${money(cost)}</div></span><button class="mega-btn" onclick="megaBuyPart('${esc2(uid)}','${id}',${cost})">+1</button></div>`}).join(''))}
+ window.megaBuyPart=function(uid,id,cost){const c=cars().find(x=>x._uid===uid);if(!c)return;if(state.balance<cost){toast('Недостаточно денег');return}state.balance-=cost;c._tune=c._tune||{};c._tune[id]=Number(c._tune[id]||0)+1;state.xp+=30;saveAll();render();toast('🛠️ Улучшено');megaTuneParts(uid)}
+ window.megaSecrets=function(){const d=dayKey();fp.secrets[d]=fp.secrets[d]||{open:false,rich:false,done:false};const s=fp.secrets[d];const unique=new Set(cars().map(c=>c.id)).size;const tasks=[['open','Открой 5 контейнеров',state.opened>=5],['rich','Собери 5 разных машин',unique>=5]];fmodal('🕵️ Секретные задания',tasks.map(x=>`<div class="mega-row"><span>${x[1]}</span><b>${x[2]?'✅':'🔒'}</b></div>`).join('')+`<button class="mega-btn green" ${s.done?'disabled':''} onclick="megaClaimSecret()">${s.done?'Получено':'Забрать награду'}</button>`)}
+ window.megaClaimSecret=function(){const d=dayKey();fp.secrets[d]=fp.secrets[d]||{open:false,rich:false,done:false};const s=fp.secrets[d];if(s.done||state.opened<5||new Set(cars().map(c=>c.id)).size<5){toast('Секретное задание ещё не выполнено');return}s.done=true;state.balance+=350000;state.xp+=180;save();saveAll();render();toast('🕵️ Секретная награда: +350 000 ₽');megaSecrets()}
+ window.megaTournament=function(){const wk=weekKey();fp.tournament[wk]=fp.tournament[wk]||{score:0,claimed:false};const t=fp.tournament[wk];const score=mega.raceWins*1000+Math.floor(mega.driftBest/10)+new Set(cars().map(c=>c.id)).size*250; t.score=score;save();fmodal('🥇 Турнир недели',`<div class="mega-stat">${score.toLocaleString('ru-RU')} очков</div><p>Гонка: ${mega.raceWins*1000}<br>Дрифт: ${Math.floor(mega.driftBest/10)}<br>Коллекция: ${new Set(cars().map(c=>c.id)).size*250}</p><button class="mega-btn green" onclick="megaClaimTournament()">${t.claimed?'Получено':'Забрать награду'}</button>`)}
+ window.megaClaimTournament=function(){const wk=weekKey();fp.tournament[wk]=fp.tournament[wk]||{score:0,claimed:false};const t=fp.tournament[wk];if(t.claimed){return}if(t.score<1000){toast('Нужно минимум 1000 очков');return}t.claimed=true;const reward=Math.min(3000000,100000+Math.floor(t.score/10));state.balance+=reward;state.xp+=200;save();saveAll();render();toast('🥇 Турнир: +'+money(reward));megaTournament()}
+ window.megaCarStats=function(){const c=cars()[0];if(!c){toast('В гараже нет машин');return}const tune=c._tune||{};fmodal('📈 Характеристики',`<div class="mega-row"><span>Машина</span><b>${esc2(c.name)}</b></div><div class="mega-row"><span>Редкость</span><b>${esc2(c.rarity)}</b></div><div class="mega-row"><span>Мощность</span><b>${power(c)}</b></div><div class="mega-row"><span>Двигатель</span><b>${tune.engine||0}</b></div><div class="mega-row"><span>Турбо</span><b>${tune.turbo||0}</b></div><div class="mega-row"><span>Тормоза</span><b>${tune.brakes||0}</b></div><div class="mega-row"><span>Подвеска</span><b>${tune.suspension||0}</b></div><div class="mega-row"><span>Сцепление</span><b>${tune.grip||0}</b></div>`)}
+})();
+
 })();
 </script>
 </body>
