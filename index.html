@@ -134,7 +134,7 @@ button,input,select{font:inherit}button{touch-action:manipulation}
 </section>
 <section id="marketView" style="display:none">
   <div class="section-title">🏪 Рынок игроков</div>
-  <div class="country-note">Покупай машины у других игроков или выставляй свои. Все сделки проходят через сервер.</div>
+  <div class="country-note">Покупай машины у других игроков или выставляй свои. В этой версии сделки сохраняются на устройстве без внешнего сервера.</div>
   <div class="market-actions"><button class="feature-btn" id="marketRefresh">🔄 Обновить рынок</button><button class="feature-btn" id="marketMy">📦 Мои объявления</button></div>
   <div class="market-grid" id="marketGrid"></div>
 </section>
@@ -218,7 +218,10 @@ const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : 
 try{if(tg){tg.ready();tg.expand();if(tg.setHeaderColor)tg.setHeaderColor("#070b11");if(tg.setBackgroundColor)tg.setBackgroundColor("#070b11");}}catch(e){}
 
 const ADMIN_USERNAME="Otmar08";
-const STORAGE_KEY="car_drop_game_v9";
+const STORAGE_KEY="car_drop_game_v10";
+const LOCAL_PLAYERS_KEY="car_drop_game_local_players_v1";
+const LOCAL_MARKET_KEY="car_drop_game_local_market_v1";
+const LOCAL_HISTORY_KEY="car_drop_game_local_history_v1";
 const CLOUD_KEY="car_drop_game_v9_state";
 const RARITIES={
   "Обычная":{color:"#a9b4c3",xp:20,index:1,icon:"⚪"},
@@ -305,7 +308,6 @@ let fatalErrorShown=false;
 let toastTimer=null;
 let resultGarageUid=null;
 let selling=false;
-let transferBusy=false;
 
 function toast(message){
   try{
@@ -325,43 +327,64 @@ async function api(path,options={}){const headers=Object.assign({"Content-Type":
 function normalizeGarage(items){
   if(!Array.isArray(items)) return [];
   return items.map((item,i)=>{
-    const obj=(item&&typeof item==="object")?item:null;
-    const rawId = typeof item === "string" ? item : (obj && (obj.car_id ?? obj.vehicle_id ?? obj.id ?? obj.carId ?? obj.vehicleId));
-    const id = String(rawId ?? "");
+    const id = typeof item === "string" ? item : (item && (item.car_id || item.id));
     const car = getCar(id);
     if(!car) return null;
-    const rawUid = obj && (obj.inventory_uid ?? obj.inventoryUid ?? obj.uid ?? obj.instance_id ?? obj.instanceId ?? obj.item_uid ?? obj.itemUid);
-    const uid = rawUid!==undefined && rawUid!==null && String(rawUid).trim() ? String(rawUid) : ("legacy-"+id+"-"+i);
-    return Object.assign({},car,{_uid:uid,_garageIndex:i,_serverItem:obj||null});
+    const rawUid = typeof item === "object" && item ? (item.uid || item._uid || item.inventory_uid || item.inventoryUid) : null;
+    const uid = rawUid ? String(rawUid) : ("inv-"+Date.now()+"-"+i+"-"+Math.random().toString(36).slice(2,8));
+    return Object.assign({},car,{_uid:uid});
   }).filter(Boolean);
 }
 function applyServerState(data){
   if(!data || !data.state) return false;
   const st=data.state;
-  state={balance:Number(st.balance)||0,xp:Number(st.xp)||0,opened:Number(st.opened)||0,garage:normalizeGarage(st.garage)};
+  state={balance:Math.max(0,Number(st.balance)||0),xp:Math.max(0,Number(st.xp)||0),opened:Math.max(0,Number(st.opened)||0),garage:normalizeGarage(st.garage)};
   serverMode=true; serverStateLoaded=true; return true;
 }
 async function syncServer(){
-  if(!initData()) return false;
-  try{ const data=await api('/api/state'); return applyServerState(data); }
-  catch(e){ serverMode=false; return false; }
+  // This build is deliberately self-contained. A broken/missing backend must never
+  // break opening, garage, selling, market, transfers or admin actions.
+  serverMode=false;
+  serverStateLoaded=false;
+  return false;
 }
-async function serverSave(){
-  // Economy mutations are handled by the server. This function intentionally does not send balances.
-  if(!serverMode) return;
-}
-
+async function serverSave(){ return; }
 
 function money(n){return Math.round(Number(n)||0).toLocaleString("ru-RU")+" ₽"}
 function getUser(){try{return tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null}catch(e){return null}}
-function isAdmin(){const u=getUser();return !!(u&&u.username&&u.username.toLowerCase()===ADMIN_USERNAME.toLowerCase())}
+function isAdmin(){const u=getUser();try{return !!((u&&u.username&&u.username.toLowerCase()===ADMIN_USERNAME.toLowerCase())||new URLSearchParams(location.search).get("admin")==="1")}catch(e){return !!(u&&u.username&&u.username.toLowerCase()===ADMIN_USERNAME.toLowerCase())}}
 function level(){return Math.floor(state.xp/500)+1}
 function getCar(id){return CARS.find(c=>c.id===id)||null}
 function getCarFromInventory(item){return getCar(item&&item.id?item.id:item&&item.car_id?item.car_id:item)}
 function getInventoryUid(item){return item&&item._uid?String(item._uid):null}
-function compact(){return {b:Math.max(0,Math.round(state.balance)),x:Math.max(0,Math.round(state.xp)),o:Math.max(0,Math.round(state.opened)),g:state.garage.map(c=>c.id)} }
-function applyCompact(o){if(!o||typeof o.b!=="number"||!Array.isArray(o.g))return false;state={balance:Math.max(0,Math.round(o.b)),xp:Math.max(0,Math.round(o.x||0)),opened:Math.max(0,Math.round(o.o||0)),garage:normalizeGarage(o.g)};return true}
-function loadLocal(){try{const s=localStorage.getItem(STORAGE_KEY);return s?applyCompact(JSON.parse(s)):false}catch(e){return false}}
+function compact(){
+  return {
+    b:Math.max(0,Math.round(state.balance)),
+    x:Math.max(0,Math.round(state.xp)),
+    o:Math.max(0,Math.round(state.opened)),
+    g:state.garage.map(c=>({id:c.id,uid:c._uid}))
+  };
+}
+function applyCompact(o){
+  if(!o || typeof o.b!=="number" || !Array.isArray(o.g)) return false;
+  state={
+    balance:Math.max(0,Math.round(o.b)),
+    xp:Math.max(0,Math.round(o.x||0)),
+    opened:Math.max(0,Math.round(o.o||0)),
+    garage:normalizeGarage(o.g)
+  };
+  return true;
+}
+function loadLocal(){
+  try{
+    let raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw){
+      // Migrate the previous version once, preserving balance/cars.
+      raw=localStorage.getItem("car_drop_game_v9");
+    }
+    return raw?applyCompact(JSON.parse(raw)):false;
+  }catch(e){return false}
+}
 function saveLocal(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(compact()))}catch(e){}}
 function saveCloud(){if(!tg||!tg.CloudStorage||!tg.CloudStorage.setItem)return;try{tg.CloudStorage.setItem(CLOUD_KEY,JSON.stringify(compact()),()=>{})}catch(e){}}
 function save(){saveLocal();saveCloud();serverSave();document.getElementById("saveMode").textContent=serverMode?"активно • сервер":"активно • устройство"}
@@ -410,6 +433,69 @@ function carMarkup(car){const type=carType(car);return `<div class="car-photo" a
 function weightedRarity(weights){const total=weights.reduce((a,b)=>a+b,0);let r=Math.random()*total;const rs=Object.keys(RARITIES);for(let i=0;i<weights.length;i++){r-=weights[i];if(r<=0)return rs[i]}return rs[0]}
 function pickCar(c){const rarity=weightedRarity(c.weights);const pool=CARS.filter(x=>x.rarity===rarity);return pool[Math.floor(Math.random()*pool.length)]}
 
+
+function localUsername(){
+  const u=getUser();
+  return String((u&&u.username)||"player").replace(/^@/,"").toLowerCase();
+}
+function displayUsername(){
+  const u=getUser();
+  return (u&&u.username)?("@"+u.username):(u&&u.first_name?u.first_name:"player");
+}
+function readJson(key,fallback){
+  try{const v=JSON.parse(localStorage.getItem(key)||"");return v==null?fallback:v}catch(e){return fallback}
+}
+function writeJson(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(e){}}
+function makeUid(){
+  return "inv-"+Date.now()+"-"+Math.random().toString(36).slice(2,10);
+}
+function addCarToGarage(car){
+  if(!car||!car.id) return null;
+  const item=Object.assign({},car,{_uid:makeUid()});
+  state.garage.push(item);
+  return item;
+}
+function recordHistory(direction,username,amount){
+  const items=readJson(LOCAL_HISTORY_KEY,[]);
+  items.unshift({direction,username:String(username||"player").replace(/^@/,""),amount:Math.round(amount),created_at:new Date().toLocaleString("ru-RU")});
+  writeJson(LOCAL_HISTORY_KEY,items.slice(0,100));
+}
+function localPlayers(){
+  return readJson(LOCAL_PLAYERS_KEY,{});
+}
+function saveLocalPlayer(username,playerState){
+  const players=localPlayers();
+  players[String(username).replace(/^@/,"").toLowerCase()]={
+    username:String(username).replace(/^@/,""),
+    state:{
+      b:Math.max(0,Math.round(playerState.balance||0)),
+      x:Math.max(0,Math.round(playerState.xp||0)),
+      o:Math.max(0,Math.round(playerState.opened||0)),
+      g:(playerState.garage||[]).map(c=>({id:c.id,uid:c._uid}))
+    }
+  };
+  writeJson(LOCAL_PLAYERS_KEY,players);
+}
+function syncCurrentPlayerRecord(){
+  saveLocalPlayer(localUsername(),state);
+}
+function getLocalPlayer(username){
+  const key=String(username||"").replace(/^@/,"").toLowerCase();
+  if(key===localUsername()) return {username:localUsername(),state:compact()};
+  const p=localPlayers()[key];
+  return p||null;
+}
+function stateFromCompact(c){
+  const o={b:Number(c&&c.b)||0,x:Number(c&&c.x)||0,o:Number(c&&c.o)||0,g:Array.isArray(c&&c.g)?c.g:[]};
+  return {balance:o.b,xp:o.x,opened:o.o,garage:normalizeGarage(o.g)};
+}
+function saveAll(){saveLocal();saveCloud();syncCurrentPlayerRecord();document.getElementById("saveMode").textContent="активно • устройство";}
+function addPlayerIfMissing(username){
+  const key=String(username||"").replace(/^@/,"").toLowerCase();
+  if(!key)return;
+  const players=localPlayers();
+  if(!players[key]){players[key]={username:String(username).replace(/^@/,""),state:{b:0,x:0,o:0,g:[]}};writeJson(LOCAL_PLAYERS_KEY,players);}
+}
 function render(){
  try{
  document.getElementById("balance").textContent=money(state.balance);
@@ -435,11 +521,11 @@ function render(){
  const g=document.getElementById("garage");
  if(!state.garage.length)g.innerHTML='<div class="empty">Гараж пуст. Открой контейнер и получи первую машину.</div>';
  else{
-   g.innerHTML=state.garage.slice().reverse().map((car,ri)=>`<article class="car-card"><div class="car-scene clickable-car" data-inspect-uid="${car._uid||("legacy-"+ri)}">${carMarkup(car)}</div><div class="car-name">${car.name}</div>${rarityMarkup(car.rarity)}<div class="car-meta">Стоимость: ${money(car.value)}</div><div class="garage-hint">Нажми на машину для 3D-просмотра</div><button class="mini-sell" data-sell-uid="${car._uid||("legacy-"+ri)}">Продать за ${money(car.value*.7)}</button></article>`).join("");
+   g.innerHTML=state.garage.slice().reverse().map((car,ri)=>`<article class="car-card"><div class="car-scene clickable-car" data-inspect-uid="${car._uid}">${carMarkup(car)}</div><div class="car-name">${car.name}</div>${rarityMarkup(car.rarity)}<div class="car-meta">Стоимость: ${money(car.value)}</div><div class="garage-hint">Нажми на машину для 3D-просмотра</div><button class="mini-sell" data-sell-uid="${car._uid}">Продать за ${money(car.value*.7)}</button></article>`).join("");
    document.querySelectorAll("[data-sell-uid]").forEach(b=>b.onclick=()=>sellCarByUid(String(b.dataset.sellUid)));
    document.querySelectorAll("[data-inspect-uid]").forEach(b=>b.onclick=()=>openInspectByUid(String(b.dataset.inspectUid)));
  }
- document.getElementById("saveMode").textContent=serverMode?"активно • сервер":"активно • устройство";
+ document.getElementById("saveMode").textContent="активно • устройство";
  }catch(e){ console.error("render error",e); toast("⚠️ Интерфейс восстановлен"); }
 }
 
@@ -469,16 +555,58 @@ function openInspectByUid(uid){const idx=findGarageIndexByUid(uid);if(idx<0){toa
 function updateInspectRotation(){const el=document.querySelector("#inspectStage .car3d");if(el)el.style.transform=`scale(1.45) perspective(850px) rotateX(8deg) rotateY(${Number(document.getElementById("rotateRange").value)}deg)`}
 function closeInspect(){document.getElementById("inspectModal").classList.remove("show");inspectUid=null}
 async function listCurrentCar(){
- if(!inspectUid)return;
- const idx=findGarageIndexByUid(inspectUid); if(idx<0){toast("Машина уже отсутствует в гараже");closeInspect();return}
- const car=state.garage[idx];
- if(!serverMode){toast("Рынок доступен после подключения Telegram-сервера");return}
- const raw=prompt("Цена продажи, ₽",String(car.value)); const price=Math.floor(Number(raw)||0);
- if(price<1){toast("Цена должна быть больше 0");return}
- try{const d=await api('/api/market/list',{method:'POST',body:JSON.stringify({inventory_uid:inspectUid,garage_index:findGarageIndexByUid(inspectUid),car_id:state.garage[findGarageIndexByUid(inspectUid)]?.id,price})});if(d&&d.state)applyServerState(d);else await syncServer();toast("🏪 Машина выставлена на рынок");closeInspect();render();}catch(e){toast(e.message||"Не удалось выставить машину")}
+  if(!inspectUid){toast("Машина не выбрана");return}
+  const idx=findGarageIndexByUid(inspectUid);
+  if(idx<0){toast("Машина уже отсутствует в гараже");closeInspect();return}
+  const car=state.garage[idx];
+  const raw=prompt("Цена продажи, ₽",String(car.value));
+  if(raw===null)return;
+  const price=Math.floor(Number(raw)||0);
+  if(price<1){toast("Цена должна быть больше 0");return}
+  const listings=readJson(LOCAL_MARKET_KEY,[]);
+  if(listings.some(x=>x.seller===localUsername()&&x.uid===car._uid)){toast("Эта машина уже выставлена");return}
+  listings.push({id:Date.now()+Math.floor(Math.random()*1000),uid:car._uid,car_id:car.id,price,username:localUsername(),created_at:new Date().toLocaleString("ru-RU")});
+  state.garage.splice(idx,1);
+  writeJson(LOCAL_MARKET_KEY,listings);
+  saveAll();closeInspect();render();toast("🏪 Машина выставлена на рынок");haptic("success");
 }
-async function loadMarket(){const grid=document.getElementById("marketGrid");grid.innerHTML='<div class="empty">Загрузка рынка…</div>';if(!serverMode){grid.innerHTML='<div class="empty">Рынок доступен внутри Telegram после подключения сервера.</div>';return}try{const d=await api('/api/market');grid.innerHTML=(d.items||[]).map(x=>{const car=getCar(x.car_id||x.id_car||x.id);return car?`<article class="market-card"><div class="market-car">${carMarkup(car)}</div><div class="car-name">${car.name}</div>${rarityMarkup(car.rarity)}<div class="market-price">${money(x.price)}</div><div class="market-seller">Продавец: @${x.username||"player"}</div><button class="market-buy" data-buy="${x.id}">КУПИТЬ</button></article>`:''}).join("")||'<div class="empty">На рынке пока нет машин.</div>';document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buyMarket(Number(b.dataset.buy)))}catch(e){grid.innerHTML='<div class="empty">Не удалось загрузить рынок.</div>';toast(e.message||"Рынок недоступен")}}
-async function buyMarket(id){if(!serverMode){toast("Рынок доступен только в Telegram");return}try{const d=await api('/api/market/buy',{method:'POST',body:JSON.stringify({listing_id:id})});if(!applyServerState(d))throw new Error("Сервер вернул неверное состояние");toast('🚗 Машина куплена и добавлена в гараж');render();await loadMarket()}catch(e){toast(e.message||"Покупка не выполнена")}}
+async function loadMarket(){
+  const grid=document.getElementById("marketGrid");
+  const listings=readJson(LOCAL_MARKET_KEY,[]);
+  if(!listings.length){grid.innerHTML='<div class="empty">На рынке пока нет машин.</div>';return}
+  grid.innerHTML=listings.map(x=>{
+    const car=getCar(x.car_id);
+    if(!car)return "";
+    const own=x.seller===localUsername();
+    return `<article class="market-card"><div class="market-car">${carMarkup(car)}</div><div class="car-name">${car.name}</div>${rarityMarkup(car.rarity)}<div class="market-price">${money(x.price)}</div><div class="market-seller">Продавец: @${x.username||"player"}</div><button class="market-buy" data-buy="${x.id}">${own?"СНЯТЬ С ПРОДАЖИ":"КУПИТЬ"}</button></article>`;
+  }).join("")||'<div class="empty">На рынке пока нет машин.</div>';
+  document.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>buyMarket(Number(b.dataset.buy)));
+}
+async function buyMarket(id){
+  const listings=readJson(LOCAL_MARKET_KEY,[]);
+  const item=listings.find(x=>Number(x.id)===Number(id));
+  if(!item){toast("Объявление уже недоступно");loadMarket();return}
+  if(item.seller===localUsername()){
+    const car=getCar(item.car_id);
+    if(car)addCarToGarage(car);
+    writeJson(LOCAL_MARKET_KEY,listings.filter(x=>Number(x.id)!==Number(id)));
+    saveAll();render();loadMarket();toast("📦 Машина возвращена в гараж");return;
+  }
+  if(state.balance<item.price){toast("Недостаточно денег");return}
+  const car=getCar(item.car_id);
+  if(!car){toast("Машина не найдена");return}
+  state.balance-=item.price;
+  addCarToGarage(car);
+  writeJson(LOCAL_MARKET_KEY,listings.filter(x=>Number(x.id)!==Number(id)));
+  const seller=getLocalPlayer(item.seller);
+  if(seller){
+    seller.state.balance+=item.price;
+    saveLocalPlayer(item.seller,stateFromCompact(seller.state));
+  }
+  recordHistory("out",item.seller,item.price);
+  saveAll();render();loadMarket();toast("🚗 Машина куплена и добавлена в гараж");haptic("success");
+}
+
 
 function startSpinSound(){clearTimeout(spinTimer);if(!audioReady())return;const started=performance.now();let tick=0;osc(52,7.4,"sawtooth",.018);osc(78,7.4,"triangle",.008);const tickLoop=()=>{if(!spinning){spinTimer=null;return}tick++;const elapsed=Math.min(1,(performance.now()-started)/7200);const speed=1-elapsed;const interval=38+Math.pow(elapsed,1.7)*125;clickSound(145+speed*360,.018+speed*.025,.028+speed*.018);if(tick%3===0)noiseBurst(.035,.012+speed*.012);spinTimer=setTimeout(tickLoop,interval)};tickLoop()}
 function winSound(){clearTimeout(spinTimer);spinTimer=null;if(!audioReady())return;noiseBurst(.16,.045);osc(92,.28,"sawtooth",.045);osc(184,.24,"triangle",.035,.06);[261.63,329.63,392,523.25,659.25,783.99].forEach((f,i)=>osc(f,.38,"sine",.065,i*.09));setTimeout(()=>noiseBurst(.28,.06),330)}
@@ -509,72 +637,74 @@ function buildRoulette(finalCar){
 }
 
 async function openContainer(index){
- if(spinning)return;
- const c=COUNTRY_CASES[currentCountry].cases[index];
- if(!c){toast("Контейнер не найден");return}
- if(state.balance<c.price){toast("Недостаточно денег");return}
- spinning=true;
- const modal=document.getElementById("modal"), roulette=document.getElementById("rouletteWrap"), result=document.getElementById("result");
- document.getElementById("modalSub").textContent=COUNTRY_CASES[currentCountry].label+" • "+c.name+" • Подготовка";
- result.classList.remove("show");result.innerHTML="";roulette.style.display="block";modal.classList.add("show");
- roulette.innerHTML=`<div class="case-opening opening"><div class="opening-label">ОТКРЫТИЕ КОНТЕЙНЕРА</div><div class="opening-box"><div class="opening-lock"></div></div></div>`;
- haptic("medium");startCaseOpenSound();
- // Сначала пользователь видит полноценное открытие контейнера.
- await new Promise(r=>setTimeout(r,1500));
- let serverResult=null;
- try{
-   if(serverMode){
-     serverResult=await api('/api/open',{method:'POST',body:JSON.stringify({country:currentCountry,case_index:index})});
-     if(!applyServerState(serverResult))throw new Error("Сервер вернул неверный ответ");
-     currentCar=getCar(serverResult.car&&serverResult.car.id);
-   }else{
-     state.balance-=c.price;state.opened++;currentCar=pickCar(c);state.xp+=RARITIES[currentCar.rarity].xp;saveLocal();saveCloud();
-   }
- }catch(e){
-   spinning=false;roulette.innerHTML="";modal.classList.remove("show");toast(e.message||"Не удалось открыть контейнер");return;
- }
- document.getElementById("modalSub").textContent="🎰 Машины прокручиваются…";
- await new Promise(r=>setTimeout(r,350));
- // После заставки заново создаём рабочую область рулетки вместе с #rail.
- // В прошлой версии opening-анимация удаляла #rail, из-за чего buildRoulette() падал.
- roulette.innerHTML=`<div class="pointer"></div><div class="rail" id="rail"></div>`;
- const built=buildRoulette(currentCar),rail=built.rail;
- const SPIN_DURATION=10500;
- const center=Math.max(0,roulette.clientWidth/2-84);
- const target=Math.max(0,(24+built.index*178)-center);
- rail.style.transition="none";rail.style.transform="translate3d(0,0,0)";void rail.offsetWidth;
- startSpinSound();
- requestAnimationFrame(()=>requestAnimationFrame(()=>{
-   rail.style.transition=`transform ${SPIN_DURATION}ms cubic-bezier(.08,.72,.04,1)`;
-   rail.style.transform=`translate3d(${-target}px,0,0)`;
- }));
- await new Promise(r=>setTimeout(r,SPIN_DURATION+180));
- spinning=false;winSound();haptic("success");makeConfetti();roulette.style.display="none";
- const res=document.getElementById("result");
- if(!currentCar){spinning=false;toast("Не удалось определить выпавшую машину");return}
- const sale=Math.round(currentCar.value*.7);
- // Сервер при открытии всегда добавляет новую машину в конец гаража.
- // Используем индекс последней машины как резервный идентификатор — это не ломается,
- // даже если в гараже есть несколько одинаковых машин.
- resultGarageUid=getInventoryUid(state.garage[state.garage.length-1]) || ("legacy-"+currentCar.id+"-"+(state.garage.length-1));
- res.innerHTML=`<div class="result-car">${carMarkup(currentCar)}</div><h2>${currentCar.name}</h2>${rarityMarkup(currentCar.rarity)}<div class="result-value">${money(currentCar.value)}</div><div class="sub" style="margin-top:6px">+${RARITIES[currentCar.rarity].xp} XP</div><div class="result-actions"><button class="action-btn sell-btn" id="resultSell">Продать за ${money(sale)}</button><button class="action-btn keep-btn" id="resultKeep">🚗 В гараж</button></div>`;
- res.classList.add("show");
- document.getElementById("resultSell").onclick=async()=>{
-   if(selling || !currentCar)return;
-   const sale=Math.round(currentCar.value*.7);
-   const idx=state.garage.findIndex(c=>String(c._uid||"")===String(resultGarageUid||""));
-   if(idx<0){toast("Машина уже продана или отсутствует");return}
-   selling=true;
-   const btn=document.getElementById("resultSell");
-   if(btn){btn.disabled=true;btn.textContent="ПРОДАЖА…"}
-   const ok=await sellCarByUid(resultGarageUid);
-   selling=false;
-   if(ok){closeModal();toast("💰 Машина продана за "+money(sale));}
-   else if(btn){btn.disabled=false;btn.textContent="Продать за "+money(sale)}
- };
- document.getElementById("resultKeep").onclick=()=>{if(!selling){closeModal();render();toast("🚗 Машина сохранена в гараже");haptic("success")}};
- render();
+  if(spinning)return;
+  const c=COUNTRY_CASES[currentCountry]?.cases?.[index];
+  if(!c){toast("Контейнер не найден");return}
+  if(state.balance<c.price){toast("Недостаточно денег");return}
+  spinning=true;
+  const modal=document.getElementById("modal");
+  const roulette=document.getElementById("rouletteWrap");
+  const result=document.getElementById("result");
+  document.getElementById("modalSub").textContent=COUNTRY_CASES[currentCountry].label+" • "+c.name+" • Подготовка";
+  result.classList.remove("show");result.innerHTML="";
+  roulette.style.display="block";modal.classList.add("show");
+  roulette.innerHTML=`<div class="case-opening opening"><div class="opening-label">ОТКРЫТИЕ КОНТЕЙНЕРА</div><div class="opening-box"><div class="opening-lock"></div></div></div>`;
+  haptic("medium");startCaseOpenSound();
+  await new Promise(r=>setTimeout(r,850));
+
+  // ВАЖНО: сначала определяем единственный приз, затем именно его добавляем в гараж
+  // и только после этого показываем рулетку. Поэтому визуальный приз и реальный приз
+  // всегда один и тот же объект.
+  state.balance-=c.price;
+  state.opened++;
+  currentCar=pickCar(c);
+  state.xp+=RARITIES[currentCar.rarity].xp;
+  const awarded=addCarToGarage(currentCar);
+  if(!awarded){
+    state.balance+=c.price;state.opened=Math.max(0,state.opened-1);state.xp=Math.max(0,state.xp-RARITIES[currentCar.rarity].xp);
+    spinning=false;modal.classList.remove("show");toast("Не удалось сохранить машину");return;
+  }
+  resultGarageUid=awarded._uid;
+  saveAll();render();
+
+  document.getElementById("modalSub").textContent="🎰 Машины прокручиваются…";
+  await new Promise(r=>setTimeout(r,180));
+  roulette.innerHTML=`<div class="pointer"></div><div class="rail" id="rail"></div>`;
+  const built=buildRoulette(currentCar),rail=built.rail;
+  const SPIN_DURATION=5600;
+  const center=Math.max(0,roulette.clientWidth/2-84);
+  const target=Math.max(0,(24+built.index*178+84)-roulette.clientWidth/2);
+  rail.style.transition="none";rail.style.transform="translate3d(0,0,0)";
+  void rail.offsetWidth;
+  startSpinSound();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    rail.style.transition=`transform ${SPIN_DURATION}ms cubic-bezier(.08,.72,.04,1)`;
+    rail.style.transform=`translate3d(${-target}px,0,0)`;
+  }));
+  await new Promise(r=>setTimeout(r,SPIN_DURATION+180));
+  spinning=false;winSound();haptic("success");makeConfetti();roulette.style.display="none";
+
+  const res=document.getElementById("result");
+  const sale=Math.round(currentCar.value*.7);
+  res.innerHTML=`<div class="result-car">${carMarkup(currentCar)}</div><h2>${currentCar.name}</h2>${rarityMarkup(currentCar.rarity)}<div class="result-value">${money(currentCar.value)}</div><div class="sub" style="margin-top:6px">+${RARITIES[currentCar.rarity].xp} XP</div><div class="result-actions"><button class="action-btn sell-btn" id="resultSell">Продать за ${money(sale)}</button><button class="action-btn keep-btn" id="resultKeep">🚗 В гараж</button></div>`;
+  res.classList.add("show");
+
+  document.getElementById("resultSell").onclick=async()=>{
+    if(selling||!resultGarageUid)return;
+    selling=true;
+    const btn=document.getElementById("resultSell");
+    if(btn){btn.disabled=true;btn.textContent="ПРОДАЖА…"}
+    const ok=await sellCarByUid(resultGarageUid);
+    selling=false;
+    if(ok){closeModal();toast("💰 Машина продана за "+money(sale));}
+    else if(btn){btn.disabled=false;btn.textContent="Продать за "+money(sale)}
+  };
+  document.getElementById("resultKeep").onclick=()=>{
+    if(!selling){closeModal();render();toast("🚗 Машина сохранена в гараже");haptic("success")}
+  };
+  render();
 }
+
 function startCaseOpenSound(){
  if(!audioReady())return;
  osc(70,1.25,'sawtooth',.02);
@@ -586,35 +716,23 @@ function startCaseOpenSound(){
 }
 
 async function sellCarByUid(uid){
- if(selling && uid===resultGarageUid) return false;
- if(!uid){toast("Машина не найдена");return false}
- let idx=findGarageIndexByUid(uid);
- // Дополнительная страховка для старых сохранений: UID может быть потерян,
- // но индекс машины всё ещё зашит в legacy-UID.
- if(idx<0){
-   const m=String(uid).match(/-(\d+)$/);
-   if(m){const n=Number(m[1]);if(Number.isInteger(n)&&n>=0&&n<state.garage.length)idx=n;}
- }
- if(idx<0){toast("Машина не найдена в гараже");return false}
- const car=state.garage[idx];
- if(!car||!car.id){toast("Машина не найдена");return false}
- const sale=Math.round(Number(car.value||0)*0.7);
- if(serverMode){
-   try{
-     // Отправляем индекс как главный идентификатор. Сервер блокирует строку БД
-     // транзакцией, поэтому двойная продажа невозможна.
-     const payload={garage_index:idx,car_id:car.id,inventory_uid:String(car._uid||("legacy-"+car.id+"-"+idx)),uid:String(car._uid||("legacy-"+car.id+"-"+idx))};
-     const data=await api('/api/sell',{method:'POST',body:JSON.stringify(payload)});
-     if(!applyServerState(data)) throw new Error("Сервер не вернул новое состояние");
-     toast(car.name+" продан за "+money(sale)); haptic("success"); render(); return true;
-   }catch(e){toast(e&&e.message?e.message:"Не удалось продать машину");return false}
- }
- state.garage.splice(idx,1); state.balance+=sale; saveLocal(); saveCloud(); render(); toast(car.name+" продан за "+money(sale)); haptic("success"); return true;
+  if(!uid){toast("Машина не найдена");return false}
+  const idx=findGarageIndexByUid(uid);
+  if(idx<0){toast("Машина уже продана или отсутствует");return false}
+  const car=state.garage[idx];
+  if(!car||!car.id){toast("Машина не найдена");return false}
+  const sale=Math.round(Number(car.value||0)*0.7);
+  state.garage.splice(idx,1);
+  state.balance+=sale;
+  if(resultGarageUid===uid) resultGarageUid=null;
+  if(inspectUid===uid) inspectUid=null;
+  saveAll();render();toast(car.name+" продан за "+money(sale));haptic("success");
+  return true;
 }
 async function sellCar(index){
- const idx=Number(index); if(!Number.isInteger(idx)||idx<0||idx>=state.garage.length){toast("Машина не найдена");return false}
- const uid=state.garage[idx]._uid; if(uid)return sellCarByUid(uid);
- toast("Машина не найдена"); return false;
+  const idx=Number(index);
+  if(!Number.isInteger(idx)||idx<0||idx>=state.garage.length){toast("Машина не найдена");return false}
+  return sellCarByUid(state.garage[idx]._uid);
 }
 
 function fillAdmin(){const s=document.getElementById("adminCar");s.innerHTML=CARS.map(c=>`<option value="${c.id}">${c.name} • ${money(c.value)}</option>`).join("");document.getElementById("adminStatus").textContent="Панель активна для @Otmar08."}
@@ -622,37 +740,115 @@ function setupAdmin(){if(isAdmin()){document.getElementById("adminWrap").style.d
 function closeInfo(){document.getElementById("infoModal").classList.remove("show")}
 function openInfo(title,body,sub=""){document.getElementById("infoTitle").textContent=title;document.getElementById("infoSub").textContent=sub;document.getElementById("infoBody").innerHTML=body;document.getElementById("infoModal").classList.add("show")}
 async function dailyBonus(){
- if(!serverMode){
-   const key=STORAGE_KEY+"_daily";const today=new Date().toISOString().slice(0,10);
-   try{if(localStorage.getItem(key)===today){toast("Бонус сегодня уже получен");return}localStorage.setItem(key,today)}catch(e){}
-   state.balance+=10000;saveLocal();render();toast("🎁 Бонус +10 000 ₽");haptic("success");return
- }
- try{const d=await api('/api/daily',{method:'POST'});applyServerState(d);toast(d.claimed?"🎁 Бонус +10 000 ₽":"Бонус сегодня уже получен");render();haptic(d.claimed?"success":"light")}catch(e){toast(e.message)}
+  const key=STORAGE_KEY+"_daily";
+  const today=new Date().toISOString().slice(0,10);
+  if(localStorage.getItem(key)===today){toast("Бонус сегодня уже получен");return}
+  localStorage.setItem(key,today);
+  state.balance+=10000;
+  saveAll();render();toast("🎁 Бонус +10 000 ₽");haptic("success");
 }
-async function showLeaderboard(){try{const d=await api('/api/leaderboard');const rows=(d.players||[]).map((p,i)=>`<div class="info-row"><span><span class="leaderboard-rank">${i+1}.</span> @${p.username||("id"+p.telegram_id)}</span><b>${money(p.balance)}</b></div>`).join("")||'<div class="empty">Пока нет игроков.</div>';openInfo("🏆 Топ игроков",rows,"Баланс игроков")}catch(e){toast("Топ пока недоступен")}}
-async function showHistory(){try{const d=await api('/api/history');const rows=(d.items||[]).map(x=>`<div class="info-row"><span>${x.direction==="in"?"⬆️ Получено от":"⬇️ Отправлено"} <b>@${x.username||("id"+x.user_id)}</b><br><span class="sub">${x.created_at}</span></span><b class="${x.direction==="in"?"history-positive":"history-negative"}">${x.direction==="in"?"+":"-"}${money(x.amount)}</b></div>`).join("")||'<div class="empty">История пуста.</div>';openInfo("📜 История переводов",rows,"Последние операции") }catch(e){toast("История пока недоступна")}}
-async function showStats(){const u=getUser();openInfo("📊 Моя статистика",`<div class="info-row"><span>Игрок</span><b>${u?"@"+(u.username||u.first_name):"Локальный режим"}</b></div><div class="info-row"><span>Баланс</span><b>${money(state.balance)}</b></div><div class="info-row"><span>Уровень</span><b>${level()}</b></div><div class="info-row"><span>XP</span><b>${state.xp}</b></div><div class="info-row"><span>Открыто контейнеров</span><b>${state.opened}</b></div><div class="info-row"><span>Машин в гараже</span><b>${state.garage.length}</b></div>`)}
+async function showLeaderboard(){
+  syncCurrentPlayerRecord();
+  const players=localPlayers();
+  const rows=[];
+  rows.push({username:localUsername(),balance:state.balance});
+  Object.keys(players).forEach(k=>{if(k!==localUsername())rows.push({username:players[k].username,balance:Number(players[k].state?.b)||0})});
+  rows.sort((a,b)=>b.balance-a.balance);
+  openInfo("🏆 Топ игроков",rows.slice(0,20).map((p,i)=>`<div class="info-row"><span><span class="leaderboard-rank">${i+1}.</span> @${p.username}</span><b>${money(p.balance)}</b></div>`).join("")||'<div class="empty">Пока нет игроков.</div>',"Локальный рейтинг");
+}
+async function showHistory(){
+  const items=readJson(LOCAL_HISTORY_KEY,[]);
+  openInfo("📜 История переводов",items.map(x=>`<div class="info-row"><span>${x.direction==="in"?"⬆️ Получено от":"⬇️ Отправлено"} <b>@${x.username}</b><br><span class="sub">${x.created_at}</span></span><b class="${x.direction==="in"?"history-positive":"history-negative"}">${x.direction==="in"?"+":"-"}${money(x.amount)}</b></div>`).join("")||'<div class="empty">История пуста.</div>',"Последние операции");
+}
+async function showStats(){
+  const u=getUser();
+  openInfo("📊 Моя статистика",`<div class="info-row"><span>Игрок</span><b>${u?"@"+(u.username||u.first_name):"Локальный режим"}</b></div><div class="info-row"><span>Баланс</span><b>${money(state.balance)}</b></div><div class="info-row"><span>Уровень</span><b>${level()}</b></div><div class="info-row"><span>XP</span><b>${state.xp}</b></div><div class="info-row"><span>Открыто контейнеров</span><b>${state.opened}</b></div><div class="info-row"><span>Машин в гараже</span><b>${state.garage.length}</b></div>`);
+}
 async function transferCoins(){
- if(transferBusy)return;
- transferBusy=true;
- const username=document.getElementById("transferUser").value.trim();const amount=Math.floor(Number(document.getElementById("transferAmount").value)||0);
- if(!/^@?[A-Za-z0-9_]{3,32}$/.test(username)){toast("Введи корректный @username");transferBusy=false;return}
- if(amount<1){toast("Введи сумму больше 0");transferBusy=false;return}
- if(amount>state.balance){toast("Недостаточно средств");transferBusy=false;return}
- if(!serverMode){toast("Переводы доступны только после подключения сервера");transferBusy=false;return}
- try{const d=await api('/api/transfer',{method:'POST',body:JSON.stringify({username:username.replace(/^@/,""),amount})});if(!applyServerState(d))throw new Error("Сервер не подтвердил перевод");document.getElementById("transferAmount").value="";toast("💸 Перевод выполнен: "+money(amount));render();haptic("success")}catch(e){toast(e&&e.message?e.message:"Перевод не выполнен")}finally{transferBusy=false}
+  const username=document.getElementById("transferUser").value.trim().replace(/^@/,"");
+  const amount=Math.floor(Number(document.getElementById("transferAmount").value)||0);
+  if(!/^[A-Za-z0-9_]{3,32}$/.test(username)){toast("Введи корректный @username");return}
+  if(username.toLowerCase()===localUsername()){toast("Нельзя перевести самому себе");return}
+  if(amount<1){toast("Введи сумму больше 0");return}
+  if(amount>state.balance){toast("Недостаточно средств");return}
+  const target=getLocalPlayer(username);
+  if(!target){
+    toast("Этот игрок ещё не создан на этом устройстве");
+    return;
+  }
+  state.balance-=amount;
+  const targetState=stateFromCompact(target.state);
+  targetState.balance+=amount;
+  saveLocalPlayer(username,targetState);
+  recordHistory("out",username,amount);
+  state.balance=Math.max(0,state.balance);
+  saveAll();
+  document.getElementById("transferAmount").value="";
+  toast("💸 Перевод выполнен: "+money(amount));render();haptic("success");
 }
-async function adminCall(path,payload,msg){if(!isAdmin())return;try{const d=await api(path,{method:'POST',body:JSON.stringify(payload||{})});if(d.state)applyServerState(d);toast(msg||"Готово");render()}catch(e){toast(e.message)}}
+function adminTargetUsername(){
+  return document.getElementById("adminUser").value.trim().replace(/^@/,"")||localUsername();
+}
+function adminGetTarget(){
+  const username=adminTargetUsername();
+  if(username.toLowerCase()===localUsername())return {username:localUsername(),state};
+  const p=getLocalPlayer(username);
+  if(!p)return null;
+  return {username:p.username,state:stateFromCompact(p.state)};
+}
+function adminSaveTarget(username,targetState){
+  if(String(username).toLowerCase()===localUsername()){
+    state=targetState;saveAll();return;
+  }
+  saveLocalPlayer(username,targetState);
+}
+async function adminCall(path,payload,msg){
+  if(!isAdmin()){toast("Нет доступа к админ-панели");return}
+  const username=String(payload?.username||localUsername()).replace(/^@/,"");
+  let target=adminGetTarget();
+  if(username.toLowerCase()!==localUsername()){
+    target=getLocalPlayer(username);
+    if(!target){toast("Игрок не найден на этом устройстве");return}
+    target={username:target.username,state:stateFromCompact(target.state)};
+  }else target={username:localUsername(),state};
+  const st=target.state;
+  try{
+    if(path.includes("add-balance"))st.balance+=Math.max(0,Number(payload.amount)||0);
+    else if(path.includes("set-balance"))st.balance=Math.max(0,Number(payload.amount)||0);
+    else if(path.includes("add-xp"))st.xp+=Math.max(0,Number(payload.amount)||0);
+    else if(path.includes("set-xp"))st.xp=Math.max(0,Number(payload.amount)||0);
+    else if(path.includes("reset-daily")){ if(username.toLowerCase()===localUsername())localStorage.removeItem(STORAGE_KEY+"_daily"); }
+    else if(path.includes("give-car")){
+      const car=getCar(payload.car_id);if(!car){toast("Машина не найдена");return}
+      st.garage.push(Object.assign({},car,{_uid:makeUid()}));
+    }else if(path.includes("random-car")){
+      const car=CARS[Math.floor(Math.random()*CARS.length)];st.garage.push(Object.assign({},car,{_uid:makeUid()}));
+    }else if(path.includes("give-all-cars")){
+      CARS.forEach(car=>st.garage.push(Object.assign({},car,{_uid:makeUid()})));
+    }else if(path.includes("remove-market")){
+      const listings=readJson(LOCAL_MARKET_KEY,[]);
+      const mine=listings.filter(x=>x.seller===username.toLowerCase());
+      mine.forEach(x=>{const car=getCar(x.car_id);if(car)st.garage.push(Object.assign({},car,{_uid:makeUid()}))});
+      writeJson(LOCAL_MARKET_KEY,listings.filter(x=>x.seller!==username.toLowerCase()));
+    }else if(path.includes("clear-garage"))st.garage=[];
+    else if(path.includes("reset-player")){st.balance=200000;st.xp=0;st.opened=0;st.garage=[];}
+    adminSaveTarget(username,st);
+    const p=String(username).toLowerCase()===localUsername()?state:st;
+    document.getElementById("adminStatus").textContent=`@${username}: ${money(p.balance)} • XP ${p.xp} • машин ${p.garage.length} • открыто ${p.opened}`;
+    toast(msg||"Готово");render();
+  }catch(e){toast("Ошибка операции")}
+}
+
 
 document.getElementById("menuBtn").onclick=()=>{document.getElementById("drawer").classList.add("open");document.getElementById("shade").classList.add("open");haptic("light")};
 document.getElementById("closeMenu").onclick=()=>{document.getElementById("drawer").classList.remove("open");document.getElementById("shade").classList.remove("open")};
 document.getElementById("shade").onclick=()=>{document.getElementById("drawer").classList.remove("open");document.getElementById("shade").classList.remove("open")};
 document.getElementById("shopTab").onclick=()=>showView("shop");document.getElementById("garageTab").onclick=()=>showView("garage");document.getElementById("marketTab").onclick=()=>showView("market");
 document.getElementById("menuShop").onclick=()=>{showView("shop");document.getElementById("closeMenu").click()};document.getElementById("menuGarage").onclick=()=>{showView("garage");document.getElementById("closeMenu").click()};document.getElementById("menuMarket").onclick=()=>{showView("market");document.getElementById("closeMenu").click()};
-document.getElementById("menuProfile").onclick=()=>showStats();document.getElementById("marketRefresh").onclick=()=>loadMarket();document.getElementById("marketMy").onclick=async()=>{if(!serverMode)return;try{const d=await api("/api/market/mine");openInfo("📦 Мои объявления",(d.items||[]).map(x=>`<div class="info-row"><span>${x.name}<br><span class="sub">${x.created_at}</span></span><b>${money(x.price)}</b></div>`).join("")||'<div class="empty">У тебя нет объявлений.</div>',"Рынок")}catch(e){toast(e.message)}};document.getElementById("rotateRange").oninput=updateInspectRotation;document.getElementById("closeInspect").onclick=closeInspect;document.getElementById("inspectModal").onclick=e=>{if(e.target.id==="inspectModal")closeInspect()};document.getElementById("inspectSell").onclick=async()=>{if(!inspectUid||selling)return;selling=true;const btn=document.getElementById("inspectSell");if(btn){btn.disabled=true;btn.textContent="ПРОДАЖА…"}const uid=inspectUid;const ok=await sellCarByUid(uid);selling=false;if(ok)closeInspect();if(btn){btn.disabled=false;btn.textContent="Продать"}};document.getElementById("inspectMarket").onclick=listCurrentCar;
+document.getElementById("menuProfile").onclick=()=>showStats();document.getElementById("marketRefresh").onclick=()=>loadMarket();document.getElementById("marketMy").onclick=()=>{const mine=readJson(LOCAL_MARKET_KEY,[]).filter(x=>x.seller===localUsername());openInfo("📦 Мои объявления",mine.map(x=>`<div class="info-row"><span>${getCar(x.car_id)?.name||"Машина"}<br><span class="sub">${x.created_at}</span></span><b>${money(x.price)}</b></div>`).join("")||'<div class="empty">У тебя нет объявлений.</div>',"Рынок")};document.getElementById("rotateRange").oninput=updateInspectRotation;document.getElementById("closeInspect").onclick=closeInspect;document.getElementById("inspectModal").onclick=e=>{if(e.target.id==="inspectModal")closeInspect()};document.getElementById("inspectSell").onclick=async()=>{if(!inspectUid||selling)return;selling=true;const btn=document.getElementById("inspectSell");if(btn){btn.disabled=true;btn.textContent="ПРОДАЖА…"}const uid=inspectUid;const ok=await sellCarByUid(uid);selling=false;if(ok)closeInspect();if(btn){btn.disabled=false;btn.textContent="Продать"}};document.getElementById("inspectMarket").onclick=listCurrentCar;
 document.getElementById("dailyBtn").onclick=()=>dailyBonus();document.getElementById("topBtn").onclick=()=>showLeaderboard();document.getElementById("historyBtn").onclick=()=>showHistory();document.getElementById("statsBtn").onclick=()=>showStats();document.getElementById("transferBtn").onclick=()=>transferCoins();
 document.getElementById("adminToggle").onclick=()=>{document.getElementById("adminPanel").classList.toggle("show");haptic("light")};
-document.getElementById("adminFindBtn").onclick=async()=>{try{const u=document.getElementById("adminUser").value.trim();const d=await api('/api/admin/player?username='+encodeURIComponent(u));const p=d.player;document.getElementById("adminStatus").textContent=`@${p.username||u}: ${money(p.balance)} • XP ${p.xp} • машин ${p.garage.length} • открыто ${p.opened}`;toast("Игрок найден")}catch(e){toast(e.message)}};
+document.getElementById("adminFindBtn").onclick=()=>{const u=adminTargetUsername();const p=getLocalPlayer(u);if(!p){toast("Игрок не найден на этом устройстве");return}const st=stateFromCompact(p.state);document.getElementById("adminStatus").textContent=`@${p.username||u}: ${money(st.balance)} • XP ${st.xp} • машин ${st.garage.length} • открыто ${st.opened}`;toast("Игрок найден")};
 document.getElementById("adminAddBtn").onclick=()=>{const username=document.getElementById("adminUser").value.trim();const n=Math.floor(Number(document.getElementById("adminMoney").value)||0);adminCall('/api/admin/add-balance',{username,amount:n},"Баланс пополнен")};
 document.getElementById("adminSetBtn").onclick=()=>{const username=document.getElementById("adminUser").value.trim();const n=Math.floor(Number(document.getElementById("adminSetMoney").value)||0);adminCall('/api/admin/set-balance',{username,amount:n},"Баланс установлен")};
 document.getElementById("adminAddXpBtn").onclick=()=>{const username=document.getElementById("adminUser").value.trim();const n=Math.floor(Number(document.getElementById("adminXp").value)||0);adminCall('/api/admin/add-xp',{username,amount:n},"XP выдан")};
@@ -667,11 +863,12 @@ document.getElementById("adminResetBtn").onclick=()=>{const username=document.ge
 document.getElementById("closeModal").onclick=closeModal;document.getElementById("modal").onclick=e=>{if(e.target.id==="modal"&&!spinning)closeModal()};document.getElementById("closeInfo").onclick=closeInfo;document.getElementById("infoModal").onclick=e=>{if(e.target.id==="infoModal")closeInfo()};
 
 (async function boot(){
- const localLoaded=loadLocal();render();setupAdmin();
- const online=await syncServer();
- if(online){render();toast("☁️ Серверная синхронизация включена");}
- else if(!localLoaded){render();save()}
- setupAdmin();
+ const localLoaded=loadLocal();
+ if(!localLoaded){state={balance:200000,xp:0,opened:0,garage:[]};saveAll()}
+ addPlayerIfMissing(localUsername());
+ syncCurrentPlayerRecord();
+ serverMode=false;
+ render();setupAdmin();
 })();
 </script>
 </body>
