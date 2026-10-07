@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#080b10">
+<script src="https://telegram.org/js/telegram-web-app.js?63"></script>
+<title>Авто Контейнеры</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#080b10;--panel:#121823;--line:#293545;--text:#f6f8fb;--muted:#9ba7b6;--gold:#f2ca4c}
+body{margin:0;background:radial-gradient(circle at 50% -10%,#344761 0,transparent 35%),linear-gradient(180deg,#080b10,#0b1018 60%,#080b10);color:var(--text);font:500 15px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+.app{max-width:980px;margin:auto;padding:10px 12px 30px}
+.header{display:flex;align-items:center;gap:10px;padding:8px 0 12px;position:sticky;top:0;z-index:20;background:linear-gradient(#080b10f2,#080b1000);backdrop-filter:blur(7px)}
+.logo{font-weight:950;font-size:18px}.logo span{color:var(--gold)}.balance{margin-left:auto;font-weight:950;color:#b9ffd5;white-space:nowrap}
+.menuBtn{width:47px;height:47px;border-radius:14px;border:1px solid #394759;background:#161d28;color:#fff;font-size:26px;cursor:pointer}
+.hero{border:1px solid var(--line);border-radius:21px;padding:17px;background:linear-gradient(155deg,#171f2c,#0d121a);box-shadow:0 20px 60px #0007}
+.hero h1{margin:0 0 6px;font-size:27px}.hero p{margin:0;color:var(--muted);line-height:1.4}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}.stat{border:1px solid var(--line);border-radius:14px;background:#111721;padding:10px}.stat .s{font-size:11px;color:var(--muted)}.stat b{display:block;font-size:19px;margin-top:3px}
+.tabs{display:flex;gap:8px;margin:10px 0 17px}.tab{flex:1;padding:11px;border-radius:12px;border:1px solid var(--line);background:#111722;color:#fff;font-weight:900;cursor:pointer}.tab.active{background:#273140;border-color:#4f5d71}
+.title{font-size:20px;font-weight:950;margin:5px 0 10px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:460px){.grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}}
+.card{background:linear-gradient(160deg,#151c27,#0f141b);border:1px solid var(--line);border-radius:18px;padding:10px;box-shadow:0 14px 30px #0005;overflow:hidden}
+.cont{height:128px;border-radius:13px;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#425064,#161d27 52%,#090c11)}
+.containerBox{width:80%;height:63%;border-radius:6px;position:relative;background:repeating-linear-gradient(90deg,var(--cc) 0 11px,#ffffff10 11px 15px);box-shadow:0 17px 25px #0009;transform:perspective(500px) rotateY(-5deg) rotateX(2deg)}
+.containerBox:before{content:"AUTO CARGO";position:absolute;left:9px;top:8px;font-size:9px;letter-spacing:1.5px;font-weight:950;color:#fffc}.containerBox:after{content:"▣  ▣";position:absolute;right:8px;bottom:8px;color:#111;font-size:10px}
+.card h3{margin:9px 2px 3px}.muted{font-size:12px;color:var(--muted);line-height:1.35}.price{font-weight:950;font-size:16px}
+.open{width:100%;padding:12px;margin-top:9px;border:0;border-radius:12px;background:linear-gradient(180deg,#ffe680,#e7b529);font-weight:950;cursor:pointer;color:#0b0d11}.open:disabled{opacity:.34;cursor:not-allowed}
+.garage{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.carCard{background:#111722;border:1px solid var(--line);border-radius:16px;padding:10px}
+.scene{height:120px;display:grid;place-items:center;border-radius:12px;background:radial-gradient(circle at 50% 35%,#304056,#0d131b 65%);overflow:hidden}
+.car{width:195px;height:100px;position:relative;transform:perspective(700px) rotateX(7deg) rotateY(-10deg);filter:drop-shadow(0 25px 13px #000d)}
+.car .body{position:absolute;left:7%;right:6%;bottom:28px;height:43px;border-radius:22px 30px 12px 12px;background:linear-gradient(180deg,var(--p1),var(--p2) 65%,#090a0c);box-shadow:inset 0 5px 12px #fff2,inset 0 -8px 12px #0009;border:1px solid #fff2}
+.car .hood{position:absolute;left:1%;bottom:53px;width:38%;height:28px;border-radius:16px 7px 4px 4px;background:linear-gradient(180deg,var(--p1),var(--p2));transform:skewX(-8deg)}
+.car .roof{position:absolute;left:29%;bottom:51px;width:40%;height:39px;border-radius:33px 38px 5px 5px;background:linear-gradient(160deg,var(--p1),var(--p2));transform:skewX(-10deg)}
+.car .glass{position:absolute;left:34%;bottom:59px;width:31%;height:21px;border:1px solid #fff4;background:linear-gradient(135deg,#bde4ff66,#162431);border-radius:18px 23px 3px 3px;transform:skewX(-9deg)}
+.car .glass2{position:absolute;left:52%;bottom:59px;width:12%;height:21px;background:#cce6ff35;border-left:1px solid #fff3;transform:skewX(-8deg)}
+.car .wheel{position:absolute;bottom:4px;width:36px;height:36px;border-radius:50%;border:4px solid #05070a;background:radial-gradient(circle,#e0e5eb 0 10%,#636c77 11% 24%,#12171d 25% 57%,#05070a 58%)}.car .wheel.l{left:17%}.car .wheel.r{right:17%}
+.car .light{position:absolute;bottom:47px;width:15px;height:9px;border-radius:8px;background:#fff4ba;box-shadow:0 0 13px #ffdf72}.car .light.l{left:7%}.car .light.r{right:8%}
+.car .grille{position:absolute;right:7%;bottom:29px;width:18%;height:15px;border-radius:3px;background:repeating-linear-gradient(90deg,#080a0d 0 3px,#262c34 3px 5px)}
+.rarity{font-size:12px;font-weight:950;margin-top:8px}.bar{display:flex;gap:3px;margin-top:4px}.bar span{height:6px;flex:1;border-radius:99px;background:#2b3440}.bar span.on{background:var(--c)}
+.sell{width:100%;margin-top:9px;padding:10px;border-radius:11px;border:1px solid #2d9d68;background:#176b45;color:#fff;font-weight:900;cursor:pointer}
+.empty{padding:30px 15px;text-align:center;color:var(--muted);border:1px dashed #394555;border-radius:15px}
+.drawerShade{position:fixed;inset:0;background:#000b;z-index:80;display:none}.drawerShade.on{display:block}
+.drawer{position:fixed;left:0;top:0;bottom:0;width:min(340px,88vw);z-index:90;background:linear-gradient(180deg,#171d28,#090d13);border-right:1px solid #374456;transform:translateX(-102%);transition:transform .2s;padding:18px;box-shadow:30px 0 80px #000c;overflow:auto}.drawer.on{transform:translateX(0)}
+.drawerHead{display:flex;align-items:center;justify-content:space-between}.x{width:42px;height:42px;border:1px solid #364255;background:#1b222d;color:#fff;border-radius:12px;cursor:pointer}.menuItem{width:100%;text-align:left;padding:13px;margin-top:10px;border:1px solid #2e394a;background:#171e28;color:#fff;border-radius:12px;font-weight:900;cursor:pointer}
+.transfer{margin-top:17px;padding-top:16px;border-top:1px solid #2b3543}.transfer h3{margin:0 0 4px}.input{width:100%;margin-top:8px;padding:12px;border-radius:11px;border:1px solid #394658;background:#0c1118;color:#fff;outline:none}.send{width:100%;margin-top:9px;padding:12px;border:0;border-radius:11px;background:linear-gradient(180deg,#61e49f,#22ac69);font-weight:950;cursor:pointer}
+.modalShade{position:fixed;inset:0;background:#04060aeF;z-index:120;display:none;align-items:center;justify-content:center;padding:12px}.modalShade.on{display:flex}.modal{width:min(700px,100%);border:1px solid #384659;border-radius:22px;background:linear-gradient(160deg,#18202d,#0a0f15);padding:14px;box-shadow:0 35px 100px #000c}
+.modalTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.reel{height:300px;border-radius:17px;background:radial-gradient(circle at 50% 35%,#31425a,#111822 58%,#070a0e);border:1px solid #263342;position:relative;overflow:hidden;display:flex;align-items:center}
+.reel:before,.reel:after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:4;pointer-events:none}.reel:before{left:0;background:linear-gradient(90deg,#070a0e,transparent)}.reel:after{right:0;background:linear-gradient(-90deg,#070a0e,transparent)}
+.pointer{position:absolute;left:50%;top:9px;bottom:9px;width:3px;background:#ffe47d;box-shadow:0 0 18px #ffe47d;z-index:5;transform:translateX(-50%);border-radius:99px}
+.track{display:flex;gap:12px;align-items:center;position:absolute;left:0;transform:translateX(0);will-change:transform}
+.reelCard{width:170px;flex:0 0 170px;border:1px solid #364456;border-radius:16px;background:#111722;padding:9px;box-shadow:0 14px 28px #0008;transform:scale(.92);opacity:.8}.reelCard.focus{opacity:1;transform:scale(1.02)}
+.reelCar{height:110px;display:grid;place-items:center}.reelCar .car{transform:perspective(700px) rotateX(7deg) rotateY(-10deg) scale(.83)}
+.result{text-align:center;animation:resultIn .45s ease both}.resultCar{height:145px;display:grid;place-items:center}.resultCar .car{transform:perspective(700px) rotateX(7deg) rotateY(-10deg) scale(1.22)}
+.result h2{margin:8px 0 1px;font-size:28px}.result .value{font-size:21px;color:#bbffd7;font-weight:950}
+.actions{display:flex;gap:8px;margin-top:13px}.actions button{flex:1}
+@keyframes resultIn{from{opacity:0;transform:scale(.85) translateY(15px)}to{opacity:1;transform:none}}
+.pulse{animation:pulse .9s infinite alternate}@keyframes pulse{to{box-shadow:0 0 40px #ffe06a88}}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:200;background:#19222f;border:1px solid #3b4a5f;padding:11px 14px;border-radius:12px;font-weight:850;box-shadow:0 20px 55px #000b;max-width:90%;text-align:center}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <button class="menuBtn" id="menuBtn">☰</button>
+    <div><div class="logo">АВТО <span>КОНТЕЙНЕРЫ</span></div><div class="sub" id="userName">Telegram Mini App</div></div>
+    <div class="balance" id="balance">0 ₽</div>
+  </header>
+
+  <section class="hero">
+    <h1>Открывай контейнеры 🚢</h1>
+    <p id="modeText">Сервер определяет приз, а красивая прокрутка показывает его тебе. Баланс и машины сохраняются.</p>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><span class="s">УРОВЕНЬ</span><b id="level">1</b></div>
+    <div class="stat"><span class="s">XP</span><b id="xp">0 / 500</b></div>
+    <div class="stat"><span class="s">МАШИН</span><b id="count">0</b></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="shopTab">🚢 Контейнеры</button>
+    <button class="tab" id="garageTab">🚗 Гараж</button>
+  </div>
+
+  <section id="shop">
+    <div class="title">Контейнеры</div>
+    <div class="grid" id="containers"></div>
+  </section>
+
+  <section id="garage" style="display:none">
+    <div class="title">Мой гараж</div>
+    <div class="garage" id="garage"></div>
+  </section>
+</div>
+
+<div class="drawerShade" id="shade"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawerHead">
+    <div><div style="font-size:22px;font-weight:950">Меню</div><div class="sub">Настройки и переводы</div></div>
+    <button class="x" id="closeDrawer">✕</button>
+  </div>
+  <button class="menuItem" id="mShop">🚢 Контейнеры</button>
+  <button class="menuItem" id="mGarage">🚗 Гараж</button>
+  <button class="menuItem" id="mRefresh">🔄 Обновить баланс</button>
+
+  <div class="transfer">
+    <h3>💸 Перевод ₽ игроку</h3>
+    <div class="sub" id="transferHint">Введи Telegram @username. Получатель должен уже открыть бота хотя бы один раз.</div>
+    <input class="input" id="nick" placeholder="@username" autocomplete="off">
+    <input class="input" id="amount" type="number" min="1" inputmode="numeric" placeholder="Сумма ₽">
+    <button class="send" id="sendBtn">ПЕРЕДАТЬ ₽</button>
+  </div>
+</aside>
+
+<div class="modalShade" id="modal">
+  <div class="modal">
+    <div class="modalTop"><div><b id="modalTitle">Открытие контейнера</b><div class="sub" id="modalSub"></div></div><button class="x" id="closeModal">✕</button></div>
+    <div class="reel pulse" id="reel"><div class="pointer"></div><div class="track" id="track"></div></div>
+    <div class="result" id="result" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+const telegramMode = !!(tg && tg.initData);
+const initData = telegramMode ? tg.initData : "";
+if(tg){tg.ready(); tg.expand();}
+window.addEventListener("DOMContentLoaded",()=>{
+  const hint=document.getElementById("transferHint");
+  if(hint && !telegramMode) hint.textContent="ДЕМО: для проверки перевода используй @alex, @ivan или @max.";
+});
+
+const DEMO_USERS = {
+  "@alex": {name:"Алекс", coins:50000},
+  "@ivan": {name:"Иван", coins:75000},
+  "@max": {name:"Макс", coins:120000}
+};
+
+const RARITIES = {
+  "Обычная":{index:1,color:"#9aa5b5",icon:"⚪"},
+  "Необычная":{index:2,color:"#4bd27c",icon:"🟢"},
+  "Эпическая":{index:3,color:"#a66bff",icon:"🟣"},
+  "Легендарная":{index:4,color:"#ff9f43",icon:"🟠"},
+  "Мифическая":{index:5,color:"#ff5261",icon:"🔴"}
+};
+const DEMO_CARS = [
+ ["Lada 2107","#d9dee5","#707983"],["ВАЗ 2114","#c7ccd2","#68717c"],["Lada Priora","#9ea8b4","#47515d"],
+ ["BMW E36","#8cc7ff","#194b76"],["Mercedes W124","#e2e8ee","#5a6572"],["BMW E46","#252c35","#06080b"],
+ ["BMW M3 E46","#60aaff","#17477c"],["Nissan GT-R R35","#ee4e5d","#681822"],["Porsche 911 Turbo","#f5f5f5","#717780"],
+ ["Lamborghini Huracán","#ffe052","#956100"],["Bugatti Chiron","#6fc7fa","#153c65"],["Koenigsegg Jesko","#dadbe0","#4a5058"]
+];
+let profile={coins:0,xp:0,level:1,cars:[]};
+
+function money(n){return Math.round(n).toLocaleString("ru-RU")+" ₽";}
+function carHTML(c,small=""){
+ return `<div class="car ${small}" style="--p1:${c.c1||c[1]};--p2:${c.c2||c[2]}">
+   <div class="body"></div><div class="hood"></div><div class="roof"></div><div class="glass"></div><div class="glass2"></div>
+   <div class="grille"></div><div class="light l"></div><div class="light r"></div><div class="wheel l"></div><div class="wheel r"></div>
+ </div>`;
+}
+function rarityHTML(r){
+ const m=RARITIES[r]||RARITIES["Обычная"];
+ let x="";for(let i=1;i<=5;i++)x+=`<span class="${i<=m.index?"on":""}" style="--c:${m.color}"></span>`;
+ return `<div class="rarity" style="color:${m.color}">${m.icon} ${r}</div><div class="bar">${x}</div>`;
+}
+function toast(msg){
+ const t=document.getElementById("toast")||Object.assign(document.body.appendChild(document.createElement("div")),{id:"toast"});
+ t.className="toast";t.textContent=msg;clearTimeout(t._x);t._x=setTimeout(()=>t.remove(),2400);
+}
+const DEMO_CAR_DATA = [
+  {name:"Lada 2107",value:12000,rarity:"Обычная",c1:"#d9dee5",c2:"#707983"},
+  {name:"ВАЗ 2114",value:18000,rarity:"Обычная",c1:"#c7ccd2",c2:"#68717c"},
+  {name:"Lada Priora",value:24000,rarity:"Обычная",c1:"#9ea8b4",c2:"#47515d"},
+  {name:"BMW E36",value:42000,rarity:"Необычная",c1:"#8cc7ff",c2:"#194b76"},
+  {name:"Mercedes W124",value:65000,rarity:"Необычная",c1:"#e2e8ee",c2:"#5a6572"},
+  {name:"BMW E46",value:95000,rarity:"Необычная",c1:"#252c35",c2:"#06080b"},
+  {name:"BMW M3 E46",value:145000,rarity:"Эпическая",c1:"#60aaff",c2:"#17477c"},
+  {name:"Nissan GT-R R35",value:320000,rarity:"Эпическая",c1:"#ee4e5d",c2:"#681822"},
+  {name:"Porsche 911 Turbo",value:780000,rarity:"Легендарная",c1:"#f5f5f5",c2:"#717780"},
+  {name:"Lamborghini Huracán",value:1500000,rarity:"Легендарная",c1:"#ffe052",c2:"#956100"},
+  {name:"Bugatti Chiron",value:3500000,rarity:"Мифическая",c1:"#6fc7fa",c2:"#153c65"},
+  {name:"Koenigsegg Jesko",value:5200000,rarity:"Мифическая",c1:"#dadbe0",c2:"#4a5058"}
+];
+let demoState = (()=>{try{
+ const s=JSON.parse(localStorage.getItem("auto_container_demo_v2")||"null");
+ if(s&&typeof s.coins==="number"&&Array.isArray(s.cars)) return s;
+}catch(e){}
+ return {coins:100000,xp:0,cars:[],nextId:1};
+})();
+function saveDemo(){localStorage.setItem("auto_container_demo_v2",JSON.stringify(demoState))}
+function weightedRarity(weights){
+ const total=weights.reduce((a,b)=>a+b,0); let r=Math.random()*total;
+ for(let i=0;i<weights.length;i++){r-=weights[i];if(r<=0)return ["Обычная","Необычная","Эпическая","Легендарная","Мифическая"][i]}
+ return "Обычная";
+}
+
+async function api(url,body){
+  if(!telegramMode){
+    return demoApi(url,body);
+  }
+  const r=await fetch(url,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({initData,...body})
+  });
+  let data={}; try{data=await r.json()}catch{}
+  if(!r.ok) throw new Error(data.detail||"Ошибка сервера");
+  return data;
+}
+function demoApi(url,body){
+  if(url==="/api/me"){
+    return Promise.resolve({
+      player:{
+        id:1,username:"demo_player",first_name:"Тестовый игрок",
+        coins:demoState.coins,xp:demoState.xp,level:Math.floor(demoState.xp/500)+1
+      },
+      cars:demoState.cars
+    });
+  }
+  if(url==="/api/open"){
+    const prices={standard:10000,premium:25000,rare:50000,legend:100000};
+    const price=prices[body.container];
+    if(demoState.coins<price) return Promise.reject(new Error("Недостаточно монет"));
+    const rarityWeights={
+      standard:[68,24,6,1.7,.3],premium:[43,34,16,6,.9],
+      rare:[20,35,28,15,2],legend:[6,22,34,29,9]
+    };
+    const rarityNames=["Обычная","Необычная","Эпическая","Легендарная","Мифическая"];
+    const rarity=weightedRarity(rarityWeights[body.container]);
+    const pool=DEMO_CAR_DATA.filter(c=>c.rarity===rarity);
+    const car={...(pool[Math.floor(Math.random()*pool.length)]||DEMO_CAR_DATA[0]),id:demoState.nextId++};
+    demoState.coins-=price;demoState.xp+=RARITIES[rarity].xp;demoState.cars.unshift(car);saveDemo();
+    return Promise.resolve({car,coins:demoState.coins,xp:demoState.xp,level:Math.floor(demoState.xp/500)+1,xp_gain:RARITIES[rarity].xp});
+  }
+  if(url==="/api/sell"){
+    const idx=demoState.cars.findIndex(c=>c.id===Number(body.car_id));
+    if(idx<0)return Promise.reject(new Error("Машина не найдена"));
+    const car=demoState.cars[idx], price=Math.floor(car.value*.7);
+    demoState.cars.splice(idx,1);demoState.coins+=price;saveDemo();
+    return Promise.resolve({ok:true,sold:car.name,coins:demoState.coins,price});
+  }
+  if(url==="/api/transfer"){
+    const username=String(body.username||"").trim().toLowerCase().replace(/^@/,"");
+    const amount=Number(body.amount);
+    if(!DEMO_USERS["@"+username]) return Promise.reject(new Error("В демо-режиме попробуй @alex, @ivan или @max"));
+    if(!Number.isInteger(amount)||amount<=0) return Promise.reject(new Error("Некорректная сумма"));
+    if(amount>demoState.coins) return Promise.reject(new Error("Недостаточно монет"));
+    demoState.coins-=amount;saveDemo();
+    return Promise.resolve({ok:true,receiver:DEMO_USERS["@"+username].name,amount,coins:demoState.coins,demo:true});
+  }
+  return Promise.reject(new Error("Неизвестная операция"));
+}
+function render(){
+ document.getElementById("balance").textContent=money(profile.coins);
+ document.getElementById("level").textContent=profile.level;
+ document.getElementById("xp").textContent=(profile.xp%500)+" / 500";
+ document.getElementById("count").textContent=profile.cars.length;
+ renderContainers();renderGarage();
+}
+function renderContainers(){
+ const colors=["#68737f","#3b5068","#2b5b7b","#6b5825"];
+ const descriptions=["Для старта","Больше необычных","Шанс на эпические","Шанс на легендарные"];
+ const prices=[10000,25000,50000,100000];
+ const keys=["standard","premium","rare","legend"];
+ document.getElementById("containers").innerHTML=keys.map((k,i)=>`
+   <article class="card">
+     <div class="cont"><div class="containerBox" style="--cc:${colors[i]}"></div></div>
+     <h3>${["Стандартный","Премиум","Редкий","Легенда"][i]}</h3>
+     <div class="muted">${descriptions[i]}</div>
+     <div class="price">${money(prices[i])}</div>
+     <button class="open" data-open="${k}" ${profile.coins<prices[i]?"disabled":""}>${profile.coins<prices[i]?"Недостаточно ₽":"ОТКРЫТЬ"}</button>
+   </article>`).join("");
+ document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openContainer(b.dataset.open));
+}
+function renderGarage(){
+ const g=document.getElementById("garage");
+ if(!profile.cars.length){g.innerHTML='<div class="empty">Гараж пуст. Открой контейнер.</div>';return}
+ g.innerHTML=profile.cars.map(c=>`
+  <article class="carCard">
+   <div class="scene">${carHTML(c)}</div>
+   <div style="font-weight:950;margin-top:8px">${c.name}</div>
+   ${rarityHTML(c.rarity)}
+   <div style="font-weight:900;margin-top:6px">${money(c.value)}</div>
+   <button class="sell" data-sell="${c.id}">Продать за ${money(c.value*.7)}</button>
+  </article>`).join("");
+ document.querySelectorAll("[data-sell]").forEach(b=>b.onclick=()=>sell(b.dataset.sell));
+}
+async function load(){
+ try{
+   const d=await api("/api/me",{});
+   profile={coins:d.player.coins,xp:d.player.xp,level:d.player.level,cars:d.cars};
+   document.getElementById("userName").textContent =
+     d.player.first_name+(d.player.username?" • @"+d.player.username:"")+
+     (telegramMode?"":" • ДЕМО");
+   render();
+   if(!telegramMode) toast("Демо-режим: игра уже работает. В Telegram будут реальные игроки.");
+ }catch(e){
+   render();
+   toast(e.message);
+ }
+}
+function makeReelCards(target){
+ const track=document.getElementById("track");
+ const list=[];
+ for(let i=0;i<34;i++){
+   let c=DEMO_CARS[Math.floor(Math.random()*DEMO_CARS.length)];
+   if(i===target.index)c=[target.name,target.c1,target.c2,target.value,target.rarity,target.id];
+   list.push(c);
+ }
+ track.innerHTML=list.map((c,i)=>`
+  <div class="reelCard" data-i="${i}">
+   <div class="reelCar">${carHTML({name:c[0],c1:c[1],c2:c[2]})}</div>
+   <b>${c[0]}</b>
+   <div class="sub">${c[4]||""}</div>
+  </div>`).join("");
+ return list;
+}
+async function openContainer(key){
+ const button=[...document.querySelectorAll("[data-open]")].find(x=>x.dataset.open===key);
+ if(button)button.disabled=true;
+ try{
+   const d=await api("/api/open",{container:key});
+   profile.coins=d.coins;profile.xp=d.xp;profile.level=d.level;
+   await animateReveal(d.car,d.xp-d.xp+d.xp);
+ }catch(e){toast(e.message)}
+ finally{render();}
+}
+function animateReveal(car){
+ return new Promise(resolve=>{
+   document.getElementById("modal").classList.add("on");
+   document.getElementById("result").style.display="none";
+   document.getElementById("reel").style.display="flex";document.getElementById("reel").classList.add("pulse");
+   document.getElementById("modalTitle").textContent="Контейнер открывается...";
+   const sub=document.getElementById("modalSub");sub.textContent="Прокрутка призов";
+   const target={...car,index:29};
+   makeReelCards(target);
+   const track=document.getElementById("track");
+   const cardW=182;
+   const viewport=document.getElementById("reel").clientWidth;
+   const finalX=-(target.index*cardW - viewport/2 + cardW/2);
+   track.style.transform="translateX(0)";
+   track.style.transition="none";
+   void track.offsetWidth;
+   setTimeout(()=>{
+     track.style.transition="transform 4.8s cubic-bezier(.08,.75,.06,1)";
+     track.style.transform=`translateX(${finalX}px)`;
+   },80);
+   setTimeout(()=>{
+     document.getElementById("reel").classList.remove("pulse");
+     document.getElementById("reel").style.display="none";
+     const res=document.getElementById("result");
+     res.innerHTML=`
+       <div class="resultCar">${carHTML(car)}</div>
+       <div class="sub">ТЕБЕ ВЫПАЛО</div>
+       <h2>${car.name}</h2>
+       ${rarityHTML(car.rarity)}
+       <div class="value">${money(car.value)}</div>
+       <div class="sub" style="margin-top:5px">+${RARITIES[car.rarity].xp} XP</div>
+       <div class="actions">
+         <button class="sell" id="leaveBtn">Забрать в гараж</button>
+         <button class="open" id="closeResult" style="margin:0">Готово</button>
+       </div>`;
+     res.style.display="block";
+     document.getElementById("modalTitle").textContent="🚗 Новый автомобиль";
+     document.getElementById("modalSub").textContent=RARITIES[car.rarity].icon+" "+car.rarity;
+     document.getElementById("closeResult").onclick=closeModal;
+     document.getElementById("leaveBtn").onclick=closeModal;
+     // Visual result only; the car was already saved server-side.
+     resolve();
+   },5100);
+ });
+}
+async function sell(id){
+ try{
+   const d=await api("/api/sell",{car_id:Number(id)});
+   profile.coins=d.coins;profile.cars=profile.cars.filter(c=>c.id!==Number(id));
+   render();toast("Продано: "+d.sold+" за "+money(d.price));
+ }catch(e){toast(e.message)}
+}
+function closeModal(){document.getElementById("modal").classList.remove("on")}
+function showShop(){document.getElementById("shop").style.display="block";document.getElementById("garage").style.display="none";document.getElementById("shopTab").classList.add("active");document.getElementById("garageTab").classList.remove("active")}
+function showGarage(){document.getElementById("shop").style.display="none";document.getElementById("garage").style.display="block";document.getElementById("garageTab").classList.add("active");document.getElementById("shopTab").classList.remove("active")}
+function openDrawer(){document.getElementById("drawer").classList.add("on");document.getElementById("shade").classList.add("on")}
+function closeDrawer(){document.getElementById("drawer").classList.remove("on");document.getElementById("shade").classList.remove("on")}
+
+document.getElementById("menuBtn").onclick=openDrawer;
+document.getElementById("closeDrawer").onclick=closeDrawer;
+document.getElementById("shade").onclick=closeDrawer;
+document.getElementById("shopTab").onclick=showShop;
+document.getElementById("garageTab").onclick=showGarage;
+document.getElementById("mShop").onclick=()=>{showShop();closeDrawer()};
+document.getElementById("mGarage").onclick=()=>{showGarage();closeDrawer()};
+document.getElementById("mRefresh").onclick=()=>{closeDrawer();load();toast("Баланс обновлён")};
+document.getElementById("sendBtn").onclick=async()=>{
+ const username=document.getElementById("nick").value.trim();
+ const amount=Number(document.getElementById("amount").value);
+ if(!username||!amount){toast("Введи @username и сумму");return}
+ try{
+   const d=await api("/api/transfer",{username,amount});
+   profile.coins=d.coins;render();closeDrawer();
+   document.getElementById("nick").value="";document.getElementById("amount").value="";
+   toast("✅ Передано "+money(d.amount)+" игроку "+d.receiver);
+ }catch(e){toast(e.message)}
+};
+document.getElementById("closeModal").onclick=closeModal;
+document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")closeModal()};
+
+if(!telegramMode){
+  document.getElementById("modeText").textContent="Сейчас открыт автономный демо-режим. Все кнопки работают, прогресс сохраняется на телефоне.";
+}
+load();
+</script>
+</body>
+</html>
