@@ -125,7 +125,7 @@ button,input,select{font:inherit}button{touch-action:manipulation}
 .pointer{position:absolute;z-index:15;left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%);background:#ffe47b;box-shadow:0 0 18px #ffd752}.pointer:before,.pointer:after{content:"";position:absolute;left:50%;transform:translateX(-50%);border-left:9px solid transparent;border-right:9px solid transparent}.pointer:before{top:5px;border-bottom:11px solid #ffe47b}.pointer:after{bottom:5px;border-top:11px solid #ffe47b}
 .rail{height:100%;width:max-content;display:flex;align-items:center;gap:10px;padding:0 24px;will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}.slot{flex:0 0 168px;height:220px;border-radius:15px;border:1px solid #344357;background:#121b27;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;box-shadow:0 10px 22px #0007}.slot-car{width:154px;height:122px;display:grid;place-items:center;overflow:hidden}.slot .car3d{transform:scale(.58) perspective(850px) rotateX(10deg) rotateY(-10deg)}.slot-name{font-size:10px;font-weight:950;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.slot-rar{font-size:10px;margin-top:3px}
 .result{display:none;text-align:center;padding:5px 3px}.result.show{display:block}.result-car{height:245px;border-radius:17px;background:radial-gradient(circle at 50% 32%,#344a63,#0f151f 62%,#090d13);display:grid;place-items:center;overflow:hidden}.result-car .car3d{transform:scale(1.18) perspective(850px) rotateX(10deg) rotateY(-10deg)}.result h2{font-size:29px;margin:10px 0 4px}.result-value{font-size:25px;font-weight:1000;color:#c3ffda}.rar{font-size:13px;font-weight:950;margin-top:5px}.rar-bars{display:flex;gap:3px;margin-top:5px}.rar-bars i{height:5px;flex:1;border-radius:99px;background:#2c3542}.rar-bars i.on{background:var(--rar)}
-.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.result-actions button{margin:0}.sell-btn{background:linear-gradient(180deg,#2cad6d,#176b45);color:#fff;border:1px solid #4bd997}.keep-btn{background:linear-gradient(180deg,#6685ee,#4058bd);color:#fff}
+.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.result-actions button{margin:0}.skip-btn{padding:9px 12px;border:1px solid #ffffff22;border-radius:10px;background:#101a27dd;color:#fff;font-weight:950;cursor:pointer}.skip-btn:disabled{opacity:.45;cursor:default}.sell-btn{background:linear-gradient(180deg,#2cad6d,#176b45);color:#fff;border:1px solid #4bd997}.keep-btn{background:linear-gradient(180deg,#6685ee,#4058bd);color:#fff}
 .drawer-shade{position:fixed;inset:0;z-index:80;background:#000b;display:none}.drawer-shade.open{display:block}.drawer{position:fixed;z-index:90;left:0;top:0;bottom:0;width:min(370px,91vw);padding:17px;background:linear-gradient(180deg,#17202d,#090e15);border-right:1px solid #39495d;transform:translateX(-105%);transition:transform .2s ease;overflow:auto;box-shadow:25px 0 80px #000c}.drawer.open{transform:translateX(0)}
 .menu-item{width:100%;text-align:left;margin-top:9px;padding:13px;border:1px solid #2e3c50;background:#151e29;color:#fff;border-radius:12px;font-weight:950;cursor:pointer}.admin-item{border-color:#92742a;background:linear-gradient(180deg,#2b2513,#1a160d)}
 .admin-panel{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #2b3648}.admin-panel.show{display:block}.admin-badge{display:inline-flex;padding:7px 10px;border:1px solid #c49e3b55;background:#c49e3b18;color:#ffd86a;border-radius:99px;font-size:11px;font-weight:950}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.admin-panel input,.admin-panel select{width:100%;margin-top:7px;padding:11px;border-radius:10px;background:#0c1219;color:#fff;border:1px solid #344255;outline:none}.admin-btn{width:100%;margin-top:8px;padding:10px;border-radius:10px;border:1px solid #3b4b60;background:#17212e;color:#fff;font-weight:900;cursor:pointer}.admin-btn.danger{border-color:#7a3445;background:#2a151d}
@@ -194,6 +194,8 @@ body{background:radial-gradient(circle at 50% -10%,#172b46 0,#080d15 42%,#05080d
 .hud-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.hud-item{padding:10px 9px;border:1px solid #ffffff0d;border-radius:16px;background:linear-gradient(145deg,#111c2b,#0a1019);box-shadow:inset 0 1px #fff1}.hud-item b{display:block;font-size:15px}.hud-item span{font-size:10px;color:#718197;text-transform:uppercase;letter-spacing:.6px}
 .admin-panel{border-radius:24px!important;padding:16px!important;border:1px solid #6d56ff33!important;background:radial-gradient(circle at 100% 0,#5f43ff18,transparent 35%),linear-gradient(145deg,#141326,#090b13)!important}.admin-badge{display:inline-flex;padding:7px 10px;border-radius:12px;background:#8b6cff18;border:1px solid #8b6cff44;color:#cbbfff;font-weight:1000;letter-spacing:.8px}.admin-panel h3{font-size:20px}.admin-btn{min-height:46px;border-radius:15px!important;background:linear-gradient(145deg,#1c2638,#0c131e)!important;border-color:#ffffff10!important;box-shadow:0 8px 18px #0005}.admin-btn:hover{transform:translateY(-1px);border-color:#7f72ff55!important}
 @media(max-width:520px){#containers{grid-template-columns:1fr}.hud-strip{grid-template-columns:repeat(2,1fr)}.vector-car{transform:scale(.88)}.result-car .vector-car{--scale:1.08}}
+
+.feature-hub{margin-top:14px;padding:14px;border:1px solid #2b394c;border-radius:18px;background:linear-gradient(145deg,#121c29,#0a1018)}.feature-hub h3{margin:0 0 10px;font-size:17px}.feature-grid-wide{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.feature-grid-wide button{min-height:44px}.feature-chip{display:inline-flex;gap:6px;align-items:center;padding:5px 8px;border-radius:99px;background:#ffffff0b;border:1px solid #ffffff12;font-size:10px;color:#c7d2df}.hot-case{outline:2px solid #ffc83d55;box-shadow:0 0 25px #ffc83d18}.hot-badge{display:inline-block;margin-top:5px;padding:4px 7px;border-radius:99px;background:#ffc83d18;color:#ffd66b;border:1px solid #ffc83d33;font-size:9px;font-weight:1000}.upgrade-row,.task-row,.auction-row,.achievement-row{padding:11px;border:1px solid #2a3749;border-radius:13px;background:#0d151f;margin-bottom:8px}.upgrade-row{display:flex;align-items:center;justify-content:space-between;gap:10px}.small-btn{border:1px solid #3b4c62;background:#172331;color:#fff;border-radius:10px;padding:8px 10px;font-weight:900;cursor:pointer}.small-btn:disabled{opacity:.4}.progress{height:7px;background:#111923;border-radius:99px;overflow:hidden;margin-top:7px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#69a9ff,#b57cff);width:0}.reward-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.spin-reward{padding:16px;text-align:center;border:1px solid #2e4055;border-radius:15px;background:radial-gradient(circle at 50% 0,#2b3e56,#0c131c)}.auction-price{font-size:17px;font-weight:1000;color:#c8ffdc}.vip-box{padding:12px;border-radius:14px;background:linear-gradient(135deg,#17142a,#0d1119);border:1px solid #8b6cff33}.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.collection-item{padding:9px;text-align:center;border-radius:10px;border:1px solid #2b384a;background:#0d141d;font-size:11px}.collection-item.done{border-color:#4ce19a55;background:#123022}.streak{font-size:28px;font-weight:1000;color:#ffd86a}
 </style>
 </head>
 <body>
@@ -254,6 +256,7 @@ body{background:radial-gradient(circle at 50% -10%,#172b46 0,#080d15 42%,#05080d
   <div class="feature-box"><h3>Полезные функции</h3><div class="feature-grid"><button class="feature-btn" id="dailyBtn">🎁 Ежедневный бонус</button><button class="feature-btn" id="topBtn">🏆 Топ игроков</button><button class="feature-btn" id="historyBtn">📜 История переводов</button><button class="feature-btn" id="statsBtn">📊 Моя статистика</button></div></div>
   <div class="transfer-box"><h3>💸 Перевести монеты</h3><div class="sub">Введи @username игрока и любую сумму в пределах своего баланса.</div><input class="field" id="transferUser" placeholder="@username"><input class="field" id="transferAmount" type="number" min="1" inputmode="numeric" placeholder="Сумма ₽"><button class="transfer-btn" id="transferBtn">ПЕРЕВЕСТИ</button><div class="sub" style="margin-top:7px">В Telegram-режиме перевод отправляется на настоящий @username через сервер. Если сервер недоступен, игра не будет притворяться, что реальный перевод выполнен.</div></div>
 
+  <div class="feature-hub"><h3>🔥 Игровые функции</h3><div class="feature-grid-wide"><button class="feature-btn" id="tasksBtn">📋 Задания</button><button class="feature-btn" id="streakBtn">🔥 Серия дней</button><button class="feature-btn" id="spinBtn">🎡 Удачное колесо</button><button class="feature-btn" id="achievementsBtn">🏅 Достижения</button><button class="feature-btn" id="collectionBtn">📚 Коллекции</button><button class="feature-btn" id="upgradeBtn">🔧 Улучшения</button><button class="feature-btn" id="auctionBtn">🔨 Аукцион</button><button class="feature-btn" id="vipBtn">💎 VIP / Уровень</button></div></div>
   <div id="adminWrap" style="display:none">
     <button class="menu-item admin-item" id="adminToggle">👑 Админ-панель</button>
   </div>
@@ -296,7 +299,7 @@ body{background:radial-gradient(circle at 50% -10%,#172b46 0,#080d15 42%,#05080d
   <div class="modal">
     <div class="modal-head">
       <div><div class="modal-title">Открытие контейнера</div><div class="sub" id="modalSub"></div></div>
-      <button class="xbtn" id="closeModal">✕</button>
+      <div style="display:flex;gap:7px;align-items:center"><button class="skip-btn" id="skipOpening" style="display:none">⏭ Пропустить</button><button class="xbtn" id="closeModal">✕</button></div>
     </div>
     <div id="rouletteWrap" class="roulette">
       <div class="pointer"></div>
@@ -453,6 +456,7 @@ let fatalErrorShown=false;
 let toastTimer=null;
 let resultGarageUid=null;
 let selling=false;
+let skipOpeningRequested=false;
 
 function toast(message){
   try{
@@ -587,7 +591,7 @@ function carMarkup(car){
   </div><div class="car-model-badge">${safe}</div></div>`
 }
 function effectiveWeights(weights){
-  const boost=[1,1.02,1.05,1.10,1.15];
+  const boost=[1,1,1,1,0.03];
   return weights.map((w,i)=>Math.max(0,Number(w)||0)*boost[i]);
 }
 function weightedRarity(weights){const boosted=effectiveWeights(weights);const total=boosted.reduce((a,b)=>a+b,0);let r=Math.random()*total;const rs=Object.keys(RARITIES);for(let i=0;i<boosted.length;i++){r-=boosted[i];if(r<=0)return rs[i]}return rs[0]}
@@ -687,7 +691,7 @@ function render(){
    const boosted=effectiveWeights(c.weights);
    const total=boosted.reduce((a,b)=>a+b,0);
    const odds=CARS.map(car=>{const ri=Object.keys(RARITIES).indexOf(car.rarity);const same=CARS.filter(x=>x.rarity===car.rarity).length;return {...car,p:(boosted[ri]/total/same)*100}}).sort((a,b)=>b.p-a.p);
-   return `<article class="card"><div class="container-art"><div class="box" style="--c:${c.color}"><div class="lock"></div><div class="bolt b1"></div><div class="bolt b2"></div><div class="bolt b3"></div><div class="box-band"></div><div class="crate-label">AUTO CARGO • ${c.name.toUpperCase()}</div></div></div><h3>${c.name}</h3><div class="muted">${c.desc}</div><div class="price">${money(c.price)}</div><details class="odds"><summary>🎯 Шансы на машины</summary><div class="odds-list">${odds.map(o=>`<div class="odds-row"><span>${RARITIES[o.rarity].icon} ${o.name}</span><b>${o.p<1?o.p.toFixed(2):o.p.toFixed(1)}%</b></div>`).join("")}</div></details><button class="open-btn" data-open="${i}" ${state.balance<c.price||spinning?"disabled":""}>${state.balance<c.price?"Недостаточно ₽":"ОТКРЫТЬ"}</button></article>`;
+   return `<article class="card"><div class="container-art"><div class="box" style="--c:${c.color}"><div class="lock"></div><div class="bolt b1"></div><div class="bolt b2"></div><div class="bolt b3"></div><div class="box-band"></div><div class="crate-label">AUTO CARGO • ${c.name.toUpperCase()}</div></div></div><h3>${c.name}</h3><div class="muted">${c.desc}</div><div class="price">${money(currentHotCase()===i?Math.round(c.price*.85):c.price)} ${currentHotCase()===i?'<span class="hot-badge">🔥 -15% сегодня</span>':''}</div><details class="odds"><summary>🎯 Шансы на машины</summary><div class="odds-list">${odds.map(o=>`<div class="odds-row"><span>${RARITIES[o.rarity].icon} ${o.name}</span><b>${o.p<1?o.p.toFixed(2):o.p.toFixed(1)}%</b></div>`).join("")}</div></details><button class="open-btn" data-open="${i}" ${state.balance<(currentHotCase()===i?Math.round(c.price*.85):c.price)||spinning?"disabled":""}>${state.balance<(currentHotCase()===i?Math.round(c.price*.85):c.price)?"Недостаточно ₽":(currentHotCase()===i?"🔥 ОТКРЫТЬ -15%":"ОТКРЫТЬ")}</button></article>`;
  }).join("");
  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openContainer(Number(b.dataset.open)));
 
@@ -788,24 +792,20 @@ function makeConfetti(){
  for(let i=0;i<70;i++){const p=document.createElement("div");p.className="piece";p.style.left=(Math.random()*100)+"%";p.style.setProperty("--dx",(Math.random()*160-80)+"px");p.style.background=["#ffc83d","#59c8ff","#b67cff","#4ce19a","#ff5f72"][i%5];p.style.animationDelay=(Math.random()*160)+"ms";root.appendChild(p)}
  setTimeout(()=>root.innerHTML="",1600);
 }
-function closeModal(){if(spinning||selling)return;document.getElementById("modal").classList.remove("show");currentCar=null;resultGarageUid=null}
+function closeModal(){if(spinning||selling)return;skipOpeningRequested=true;const sb=document.getElementById("skipOpening");if(sb)sb.style.display="none";document.getElementById("modal").classList.remove("show");currentCar=null;resultGarageUid=null}
+function slotPreviewMarkup(car){
+ const m=RARITIES[car.rarity]||RARITIES["Обычная"];
+ return `<div style="width:112px;height:58px;border-radius:12px;background:linear-gradient(145deg,${car.c1},${car.c2});border:1px solid ${m.color}66;box-shadow:0 8px 18px #0008;position:relative;overflow:hidden"><div style="position:absolute;left:13px;right:13px;bottom:8px;height:18px;border-radius:12px;background:#0b1118cc"></div><div style="position:absolute;left:27px;top:12px;width:50px;height:14px;border-radius:9px;background:#bdeaff33;border:1px solid #ffffff35"></div><div style="position:absolute;left:17px;bottom:4px;width:12px;height:12px;border-radius:50%;background:#05070a;border:2px solid #7d8791"></div><div style="position:absolute;right:17px;bottom:4px;width:12px;height:12px;border-radius:50%;background:#05070a;border:2px solid #7d8791"></div></div>`;
+}
 function buildRoulette(finalCar){
- const rail=document.getElementById("rail");
- rail.innerHTML="";
- // Длинная настоящая лента: машины реально проезжают перед указателем.
- const seq=[];
- const finalIndex=52;
- for(let i=0;i<68;i++){
-   // Чем ближе к финалу, тем интереснее последовательность, но победитель только один.
-   seq.push(CARS[Math.floor(Math.random()*CARS.length)]);
+ const rail=document.getElementById("rail"); rail.innerHTML="";
+ const finalIndex=27;
+ for(let i=0;i<36;i++){
+   const car=i===finalIndex?finalCar:CARS[Math.floor(Math.random()*CARS.length)];
+   const slot=document.createElement("div"); slot.className="slot";
+   slot.innerHTML=`<div class="slot-car">${slotPreviewMarkup(car)}</div><div class="slot-name">${car.name}</div><div class="slot-rar" style="color:${RARITIES[car.rarity].color}">${RARITIES[car.rarity].icon} ${car.rarity}</div>`;
+   rail.appendChild(slot);
  }
- seq[finalIndex]=finalCar;
- seq.forEach((car,i)=>{
-   const s=document.createElement("div");
-   s.className="slot";
-   s.innerHTML=`<div class="slot-car">${carMarkup(car)}</div><div class="slot-name">${car.name}</div><div class="slot-rar" style="color:${RARITIES[car.rarity].color}">${RARITIES[car.rarity].icon} ${car.rarity}</div>`;
-   rail.appendChild(s);
- });
  return {rail,index:finalIndex};
 }
 
@@ -813,76 +813,40 @@ async function openContainer(index){
   if(spinning)return;
   const c=COUNTRY_CASES[currentCountry]?.cases?.[index];
   if(!c){toast("Контейнер не найден");return}
-  if(state.balance<c.price){toast("Недостаточно денег");return}
-  spinning=true;
-  const modal=document.getElementById("modal");
-  const roulette=document.getElementById("rouletteWrap");
-  const result=document.getElementById("result");
+  const hotIndex=currentHotCase(); const hot=(hotIndex===index); const openPrice=hot?Math.round(c.price*0.85):c.price; if(state.balance<openPrice){toast("Недостаточно денег");return}
+  spinning=true; skipOpeningRequested=false;
+  const modal=document.getElementById("modal"), roulette=document.getElementById("rouletteWrap"), result=document.getElementById("result"), skipBtn=document.getElementById("skipOpening");
   document.getElementById("modalSub").textContent=COUNTRY_CASES[currentCountry].label+" • "+c.name+" • Подготовка";
-  result.classList.remove("show");result.innerHTML="";
-  roulette.style.display="block";modal.classList.add("show");
+  result.classList.remove("show");result.innerHTML=""; roulette.style.display="block"; modal.classList.add("show");
+  if(skipBtn){skipBtn.style.display="inline-flex";skipBtn.disabled=false;skipBtn.textContent="⏭ Пропустить";}
   roulette.innerHTML=`<div class="case-opening opening"><div class="opening-label">ОТКРЫТИЕ КОНТЕЙНЕРА</div><div class="opening-box"><div class="opening-lock"></div></div></div>`;
   haptic("medium");startCaseOpenSound();
-  await new Promise(r=>setTimeout(r,850));
+  await new Promise(resolve=>{const timer=setTimeout(resolve,850);const check=()=>{if(skipOpeningRequested){clearTimeout(timer);resolve();}else setTimeout(check,25)};check();});
 
-  // ВАЖНО: сначала определяем единственный приз, затем именно его добавляем в гараж
-  // и только после этого показываем рулетку. Поэтому визуальный приз и реальный приз
-  // всегда один и тот же объект.
-  state.balance-=c.price;
-  state.opened++;
-  currentCar=pickCar(c);
-  state.xp+=RARITIES[currentCar.rarity].xp;
+  state.balance-=openPrice; state.opened++; currentCar=pickCar(c); featureProgressOnOpen(currentCar); state.xp+=RARITIES[currentCar.rarity].xp;
   const awarded=addCarToGarage(currentCar);
-  if(!awarded){
-    state.balance+=c.price;state.opened=Math.max(0,state.opened-1);state.xp=Math.max(0,state.xp-RARITIES[currentCar.rarity].xp);
-    spinning=false;modal.classList.remove("show");toast("Не удалось сохранить машину");return;
+  if(!awarded){state.balance+=openPrice;state.opened=Math.max(0,state.opened-1);state.xp=Math.max(0,state.xp-RARITIES[currentCar.rarity].xp);spinning=false;modal.classList.remove("show");if(skipBtn)skipBtn.style.display="none";toast("Не удалось сохранить машину");return}
+  currentCar=awarded; resultGarageUid=awarded._uid; saveAll();render();
+
+  if(!skipOpeningRequested){
+    document.getElementById("modalSub").textContent="🎰 Машины прокручиваются…";
+    await new Promise(r=>setTimeout(r,80));
+    roulette.innerHTML=`<div class="pointer"></div><div class="rail" id="rail"></div>`;
+    const built=buildRoulette(currentCar),rail=built.rail,SPIN_DURATION=3200;
+    rail.style.transition="none";rail.style.transform="translate3d(0,0,0)";void rail.offsetWidth;
+    const winnerSlot=rail.children[built.index],rr=roulette.getBoundingClientRect(),wr=winnerSlot.getBoundingClientRect();
+    const target=Math.max(0,(wr.left+wr.width/2)-(rr.left+rr.width/2));
+    startSpinSound();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{rail.style.transition=`transform ${SPIN_DURATION}ms cubic-bezier(.08,.72,.04,1)`;rail.style.transform=`translate3d(${-target}px,0,0)`;}));
+    await new Promise(resolve=>{const timer=setTimeout(resolve,SPIN_DURATION+120);const check=()=>{if(skipOpeningRequested){clearTimeout(timer);rail.style.transition="none";rail.style.transform=`translate3d(${-target}px,0,0)`;resolve();}else setTimeout(check,25)};check();});
   }
-  currentCar=awarded;
-  resultGarageUid=awarded._uid;
-  saveAll();render();
+  spinning=false;winSound();haptic("success");makeConfetti();roulette.style.display="none";if(skipBtn)skipBtn.style.display="none";
 
-  document.getElementById("modalSub").textContent="🎰 Машины прокручиваются…";
-  await new Promise(r=>setTimeout(r,180));
-  roulette.innerHTML=`<div class="pointer"></div><div class="rail" id="rail"></div>`;
-  const built=buildRoulette(currentCar),rail=built.rail;
-  const SPIN_DURATION=5600;
-  // Центрируем именно слот победителя под указателем по реальным координатам DOM.
-  // Это убирает рассинхрон, когда выпал McLaren, а под указателем оказывался BMW.
-  rail.style.transition="none";rail.style.transform="translate3d(0,0,0)";
-  void rail.offsetWidth;
-  const winnerSlot=rail.children[built.index];
-  const rr=roulette.getBoundingClientRect();
-  const wr=winnerSlot.getBoundingClientRect();
-  const target=Math.max(0, (wr.left + wr.width/2) - (rr.left + rr.width/2));
-  void rail.offsetWidth;
-  startSpinSound();
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    rail.style.transition=`transform ${SPIN_DURATION}ms cubic-bezier(.08,.72,.04,1)`;
-    rail.style.transform=`translate3d(${-target}px,0,0)`;
-  }));
-  await new Promise(r=>setTimeout(r,SPIN_DURATION+180));
-  spinning=false;winSound();haptic("success");makeConfetti();roulette.style.display="none";
-
-  const res=document.getElementById("result");
-  // Финальный экран всегда строится из currentCar — того же объекта, который был добавлен в гараж.
-  const winnerCar=currentCar;
-  const sale=Math.round(winnerCar.value); // 100% стоимости, комиссия 0%
+  const res=document.getElementById("result"),winnerCar=currentCar,sale=Math.round(winnerCar.value);
   res.innerHTML=`<div class="result-car">${carMarkup(winnerCar)}</div><h2>${winnerCar.name}</h2>${rarityMarkup(currentCar.rarity)}<div class="result-value">${money(currentCar.value)}</div><div class="sub" style="margin-top:6px">+${RARITIES[currentCar.rarity].xp} XP</div><div class="result-actions"><button class="action-btn sell-btn" id="resultSell">Продать за ${money(sale)}</button><button class="action-btn keep-btn" id="resultKeep">🚗 В гараж</button></div>`;
   res.classList.add("show");
-
-  document.getElementById("resultSell").onclick=async()=>{
-    if(selling||!resultGarageUid)return;
-    selling=true;
-    const btn=document.getElementById("resultSell");
-    if(btn){btn.disabled=true;btn.textContent="ПРОДАЖА…"}
-    const ok=await sellCarByUid(resultGarageUid);
-    selling=false;
-    if(ok){closeModal();toast("💰 Машина продана за "+money(sale));}
-    else if(btn){btn.disabled=false;btn.textContent="Продать за "+money(sale)}
-  };
-  document.getElementById("resultKeep").onclick=()=>{
-    if(!selling){closeModal();render();toast("🚗 Машина сохранена в гараже");haptic("success")}
-  };
+  document.getElementById("resultSell").onclick=async()=>{if(selling||!resultGarageUid)return;selling=true;const btn=document.getElementById("resultSell");if(btn){btn.disabled=true;btn.textContent="ПРОДАЖА…"}const ok=await sellCarByUid(resultGarageUid);selling=false;if(ok){closeModal();toast("💰 Машина продана за "+money(sale));}else if(btn){btn.disabled=false;btn.textContent="Продать за "+money(sale)}};
+  document.getElementById("resultKeep").onclick=()=>{if(!selling){closeModal();render();toast("🚗 Машина сохранена в гараже");haptic("success")}};
   render();
 }
 
@@ -904,12 +868,12 @@ async function sellCarByUid(uid){
   if(!car||!car.id){toast("Машина не найдена");return false}
   const sale=Math.round(Number(car.value||0));
   const commission=0; // комиссия за продажу отключена
-  const payout=sale-commission;
+  const payout=Math.round(sale*(1+Number(car._upgrade||0)*.12))-commission;
   state.garage.splice(idx,1);
   state.balance+=payout;
   if(resultGarageUid===uid) resultGarageUid=null;
   if(inspectUid===uid) inspectUid=null;
-  saveAll();render();toast(car.name+" продан за "+money(payout));haptic("success");
+  bumpTask("sold",1);bumpTask("earned",payout); saveAll();render();toast(car.name+" продан за "+money(payout));haptic("success");
   return true;
 }
 async function sellCar(index){
@@ -917,6 +881,46 @@ async function sellCar(index){
   if(!Number.isInteger(idx)||idx<0||idx>=state.garage.length){toast("Машина не найдена");return false}
   return sellCarByUid(state.garage[idx]._uid);
 }
+
+// ===== Дополнительные игровые системы =====
+const EXTRA_KEY=STORAGE_KEY+"_extra_v1";
+function extraLoad(){return readJson(EXTRA_KEY,{tasks:{},streak:0,lastDay:"",spinDay:"",ach:{},upgrades:{},auctions:[],hotDay:"",hotCase:-1})}
+let extra=extraLoad();
+function extraSave(){writeJson(EXTRA_KEY,extra)}
+function dayKey(){return new Date().toISOString().slice(0,10)}
+function yesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10)}
+function ensureDailyExtra(){const d=dayKey();if(extra.hotDay!==d){const cases=COUNTRY_CASES[currentCountry]?.cases||[];extra.hotDay=d;extra.hotCase=cases.length?Math.floor(Math.random()*cases.length):-1;extraSave()}}
+function currentHotCase(){ensureDailyExtra();return extra.hotCase}
+const TASKS=[
+ {id:"open3",name:"Открой 3 контейнера",goal:3,reward:15000,kind:"opened"},
+ {id:"open10",name:"Открой 10 контейнеров",goal:10,reward:60000,kind:"opened"},
+ {id:"sell2",name:"Продай 2 машины",goal:2,reward:25000,kind:"sold"},
+ {id:"earn100",name:"Получи 100 000 ₽ продажами",goal:100000,reward:30000,kind:"earned"},
+ {id:"legend",name:"Получи Легендарную или выше",goal:1,reward:75000,kind:"rare"}
+];
+function taskProgress(t){const a=extra.tasks[dayKey()]||{};return Math.min(t.goal,Number(a[t.kind]||0))}
+function taskDone(t){const a=extra.tasks[dayKey()]||{};return !!a["done_"+t.id]}
+function bumpTask(kind,amount=1){const d=dayKey();extra.tasks[d]=extra.tasks[d]||{};extra.tasks[d][kind]=Number(extra.tasks[d][kind]||0)+Number(amount||0);for(const t of TASKS){if(!taskDone(t)&&taskProgress(t)>=t.goal){extra.tasks[d]["done_"+t.id]=true;state.balance+=t.reward;state.xp+=50;toast("🎁 Задание выполнено: +"+money(t.reward));}}extraSave()}
+function showTasks(){const d=dayKey();let a=extra.tasks[d]||{};const body=TASKS.map(t=>{const p=taskProgress(t),done=taskDone(t),pct=Math.min(100,p/t.goal*100);return `<div class="task-row"><div style="display:flex;justify-content:space-between;gap:8px"><b>${done?'✅ ':''}${t.name}</b><span>${p}/${t.goal}</span></div><div class="progress"><i style="width:${pct}%"></i></div><div class="sub" style="margin-top:6px">Награда: <b>${money(t.reward)}</b></div></div>`}).join('');openInfo('📋 Ежедневные задания',body,'Обновляются каждый день');}
+function updateStreak(){const d=dayKey();if(extra.lastDay===d)return;if(extra.lastDay===yesterdayKey())extra.streak=Number(extra.streak||0)+1;else extra.streak=1;extra.lastDay=d;const reward=Math.min(150000,10000*extra.streak);state.balance+=reward;state.xp+=100;extraSave();saveAll();toast(`🔥 Серия ${extra.streak} дней • +${money(reward)}`)}
+function showStreak(){updateStreak();openInfo('🔥 Серия входов',`<div class="spin-reward"><div class="streak">${extra.streak} 🔥</div><div class="sub">За сегодняшний вход уже начислено. Чем дольше серия, тем больше награда.</div></div><div class="info-row"><span>Награда сегодня</span><b>${money(Math.min(150000,10000*extra.streak))}</b></div>`,'Ежедневная награда')}
+function dailySpin(){if(extra.spinDay===dayKey()){toast('🎡 Колесо сегодня уже использовано');return}extra.spinDay=dayKey();const rewards=[5000,10000,25000,50000,75000,100000];const n=rewards[Math.floor(Math.random()*rewards.length)];state.balance+=n;state.xp+=40;extraSave();saveAll();toast('🎡 Колесо: +'+money(n));haptic('success');openInfo('🎡 Удачное колесо',`<div class="spin-reward"><div style="font-size:42px">🎉</div><h2>+${money(n)}</h2><div class="sub">Следующее вращение будет доступно завтра.</div></div>`)}
+function achievementData(){const unique=new Set(state.garage.map(x=>x.id)).size;return [
+ ['first','🚗 Первый дроп',state.opened>=1,'Открой первый контейнер'],['ten','🔟 Десять открытий',state.opened>=10,'Открой 10 контейнеров'],['hundred','💯 Сто открытий',state.opened>=100,'Открой 100 контейнеров'],['collector','📚 Коллекционер',unique>=10,'Собери 10 разных машин'],['legend','🟠 Легенда',state.garage.some(x=>['Легендарная','Мифическая'].includes(x.rarity)),'Получи Легендарную или Мифическую'],['mythic','💎 Мифический дроп',state.garage.some(x=>x.rarity==='Мифическая'),'Получи Мифическую машину'],['rich','💰 Миллионер',state.balance>=1000000,'Достигни 1 000 000 ₽']
+]}
+function showAchievements(){const rows=achievementData().map(a=>`<div class="achievement-row"><div style="display:flex;justify-content:space-between"><b>${a[2]?'🏆':'🔒'} ${a[1]}</b><span>${a[2]?'Выполнено':'В процессе'}</span></div><div class="sub" style="margin-top:4px">${a[3]}</div></div>`).join('');openInfo('🏅 Достижения',rows,'Коллекция наград')}
+function showCollection(){const ids=new Set(state.garage.map(x=>x.id));const body=`<div class="collection-grid">${CARS.map(c=>`<div class="collection-item ${ids.has(c.id)?'done':''}">${ids.has(c.id)?'✅':'🔒'}<br>${c.name}<br><span class="sub">${c.rarity}</span></div>`).join('')}</div><div class="info-row" style="margin-top:10px"><span>Собрано</span><b>${ids.size}/${CARS.length}</b></div>`;openInfo('📚 Коллекции',body,'Собирай уникальные машины')}
+function upgradeCost(car){const lvl=Number(car._upgrade||0);return Math.round((car.value||0)*(.15+.1*lvl))}
+function showUpgrades(){const body=state.garage.length?state.garage.map(c=>{const lvl=Number(c._upgrade||0),cost=upgradeCost(c);return `<div class="upgrade-row"><div><b>${c.name}</b><div class="sub">Ур. ${lvl} • цена продажи ${money(Math.round(c.value*(1+lvl*.12)))}</div></div><button class="small-btn" onclick="upgradeCar('${c._uid}')" ${state.balance<cost?'disabled':''}>+1 • ${money(cost)}</button></div>`}).join(''):'<div class="empty">В гараже пока нет машин.</div>';openInfo('🔧 Улучшения машин',body,'Каждый уровень повышает цену продажи на 12%')}
+function upgradeCar(uid){const c=state.garage.find(x=>x._uid===uid);if(!c)return;const cost=upgradeCost(c);if(state.balance<cost){toast('Недостаточно денег');return}state.balance-=cost;c._upgrade=Number(c._upgrade||0)+1;state.xp+=20;saveAll();render();showUpgrades();toast('🔧 Машина улучшена до уровня '+c._upgrade)}
+function vipLevel(){return Math.max(1,Math.floor((state.opened+state.xp/100)/25)+1)}
+function showVip(){const v=vipLevel(),next=v*25;openInfo('💎 VIP / Уровень',`<div class="vip-box"><h2 style="margin:0">VIP ${v}</h2><div class="sub">Открытия: ${state.opened} • XP: ${state.xp}</div><div class="progress"><i style="width:${Math.min(100,((state.opened+state.xp/100)%25)/25*100)}%"></i></div><div class="sub" style="margin-top:8px">До следующего VIP: ${Math.max(0,next-(state.opened+Math.floor(state.xp/100)))} очков</div></div><div class="info-row"><span>Бонус VIP</span><b>доступ к статусу и прогрессу</b></div>`,'Система прогресса')}
+function auctionData(){extra.auctions=Array.isArray(extra.auctions)?extra.auctions:[];return extra.auctions}
+function listAuction(uid){const c=state.garage.find(x=>x._uid===uid);if(!c)return;const price=Math.max(1,Math.round(c.value*(1+Number(c._upgrade||0)*.12)));const idx=state.garage.findIndex(x=>x._uid===uid);state.garage.splice(idx,1);auctionData().push({id:'auc-'+Date.now()+Math.random().toString(36).slice(2),seller:localUsername(),car:c,price,created:Date.now()});extraSave();saveAll();showAuction();render();toast('🔨 Машина выставлена за '+money(price))}
+function buyAuction(id){const a=auctionData().find(x=>x.id===id);if(!a)return;if(a.seller===localUsername()){toast('Это твой лот');return}if(state.balance<a.price){toast('Недостаточно денег');return}state.balance-=a.price;state.garage.push(Object.assign({},a.car,{_uid:makeUid()}));extra.auctions=auctionData().filter(x=>x.id!==id);extraSave();saveAll();render();showAuction();toast('🔨 Покупка выполнена');haptic('success')}
+function showAuction(){const mine=state.garage.slice(0,8).map(c=>`<div class="auction-row"><div><b>${c.name}</b><div class="sub">Твоя машина • ${c.rarity}</div></div><button class="small-btn" onclick="listAuction('${c._uid}')">Выставить</button></div>`).join('');const lots=auctionData().map(a=>`<div class="auction-row"><div><b>${a.car.name}</b><div class="sub">@${a.seller} • ${a.car.rarity}</div></div><div style="text-align:right"><div class="auction-price">${money(a.price)}</div><button class="small-btn" onclick="buyAuction('${a.id}')">Купить</button></div></div>`).join('');openInfo('🔨 Аукцион',`<h3>Твои машины</h3>${mine||'<div class="empty">Нет машин для выставления.</div>'}<h3 style="margin-top:15px">Лоты игроков</h3>${lots||'<div class="empty">Пока нет лотов.</div>'}`,'Локальный режим: реальные сделки требуют backend')}
+function showHotCase(){ensureDailyExtra();const c=COUNTRY_CASES[currentCountry]?.cases?.[extra.hotCase];if(c)toast('🔥 Горячий контейнер: '+c.name+' со скидкой 15% сегодня')}
+function featureProgressOnOpen(car){bumpTask('opened',1);if(['Легендарная','Мифическая'].includes(car.rarity))bumpTask('rare',1)}
 
 function fillAdmin(){const s=document.getElementById("adminCar");s.innerHTML=CARS.map(c=>`<option value="${c.id}">${c.name} • ${money(c.value)}</option>`).join("");document.getElementById("adminStatus").textContent="👑 Владелец: @Otmar08 • доступ только по Telegram username"}
 function setupAdmin(){if(isAdmin()){document.getElementById("adminWrap").style.display="block";fillAdmin()}else document.getElementById("adminWrap").style.display="none"}
@@ -955,7 +959,7 @@ async function transferCoins(){
   if(amount<1){toast("Введи сумму больше 0");return}
   if(amount>state.balance){toast("Недостаточно средств");return}
   try{
-    const d=await api('/api/transfer',{method:'POST',body:JSON.stringify({username,amount})});
+    const d=await api('/api/transfer',{method:'POST',body:JSON.stringify({username,to_username:username,amount,from_username:telegramIdentity().username||null,from_telegram_id:telegramIdentity().id||null})});
     if(d&&d.state){applyServerState(d);saveAll();document.getElementById("transferAmount").value="";toast("💸 Реальный перевод выполнен: "+money(amount));render();haptic("success");return}
     throw new Error("Сервер не подтвердил перевод");
   }catch(e){
@@ -963,7 +967,7 @@ async function transferCoins(){
     if(target){
       state.balance-=amount;const targetState=stateFromCompact(target.state);targetState.balance+=amount;saveLocalPlayer(username,targetState);recordHistory("out",username,amount);saveAll();document.getElementById("transferAmount").value="";toast("💸 Локальный перевод выполнен: "+money(amount));render();haptic("success");return;
     }
-    toast("Реальный перевод не выполнен: сервер не подтвердил операцию");
+    toast("❌ Реальный перевод не выполнен. Для перевода реальному Telegram-пользователю нужен рабочий /api/transfer на сервере.");
   }
 }
 function adminTargetUsername(){
@@ -1036,7 +1040,9 @@ document.getElementById("adminAllCarsBtn").onclick=()=>adminCall('/api/admin/giv
 document.getElementById("adminReturnMarketBtn").onclick=()=>adminCall('/api/admin/remove-market',{username:document.getElementById("adminUser").value.trim()},"Машины с рынка возвращены");
 document.getElementById("adminClearGarageBtn").onclick=()=>{const username=document.getElementById("adminUser").value.trim();if(confirm("Очистить гараж игрока?"))adminCall('/api/admin/clear-garage',{username},"Гараж очищен")};
 document.getElementById("adminResetBtn").onclick=()=>{const username=document.getElementById("adminUser").value.trim();if(confirm("Полностью сбросить игрока?"))adminCall('/api/admin/reset-player',{username},"Игрок сброшен")};
-document.getElementById("closeModal").onclick=closeModal;document.getElementById("modal").onclick=e=>{if(e.target.id==="modal"&&!spinning)closeModal()};document.getElementById("closeInfo").onclick=closeInfo;document.getElementById("infoModal").onclick=e=>{if(e.target.id==="infoModal")closeInfo()};
+document.getElementById("skipOpening").onclick=()=>{if(spinning){skipOpeningRequested=true;const b=document.getElementById("skipOpening");b.disabled=true;b.textContent="⏭ Пропускаем…";haptic("light")}};document.getElementById("closeModal").onclick=closeModal;document.getElementById("modal").onclick=e=>{if(e.target.id==="modal"&&!spinning)closeModal()};document.getElementById("closeInfo").onclick=closeInfo;document.getElementById("infoModal").onclick=e=>{if(e.target.id==="infoModal")closeInfo()};
+
+document.getElementById('tasksBtn').onclick=showTasks;document.getElementById('streakBtn').onclick=showStreak;document.getElementById('spinBtn').onclick=dailySpin;document.getElementById('achievementsBtn').onclick=showAchievements;document.getElementById('collectionBtn').onclick=showCollection;document.getElementById('upgradeBtn').onclick=showUpgrades;document.getElementById('auctionBtn').onclick=showAuction;document.getElementById('vipBtn').onclick=showVip;
 
 (async function boot(){
  document.getElementById("menuUser").textContent=displayUsername();
