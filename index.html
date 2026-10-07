@@ -245,7 +245,7 @@ body{background:radial-gradient(circle at 50% -10%,#172b46 0,#080d15 42%,#05080d
 <div class="drawer-shade" id="shade"></div>
 <aside class="drawer" id="drawer">
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <div><div style="font-size:21px;font-weight:1000">Меню</div><div class="sub" id="menuUser">Car Drop Game</div></div>
+    <div><div style="font-size:21px;font-weight:1000">Меню</div><div class="sub" id="menuUser">Car Drop Game</div><div class="sub" id="menuTelegramId" style="margin-top:3px;color:#6f8095"></div></div>
     <button class="xbtn" id="closeMenu">✕</button>
   </div>
   <button class="menu-item" id="menuShop">🚢 Контейнеры</button>
@@ -497,7 +497,7 @@ async function serverSave(){ return; }
 
 function money(n){return Math.round(Number(n)||0).toLocaleString("ru-RU")+" ₽"}
 function getUser(){try{return tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null}catch(e){return null}}
-function isAdmin(){const u=getUser();try{return !!((u&&u.username&&u.username.toLowerCase()===ADMIN_USERNAME.toLowerCase())||new URLSearchParams(location.search).get("admin")==="1")}catch(e){return !!(u&&u.username&&u.username.toLowerCase()===ADMIN_USERNAME.toLowerCase())}}
+function isAdmin(){const u=getUser();return !!(u&&u.username&&u.username.toLowerCase()===ADMIN_USERNAME.toLowerCase())}
 function level(){return Math.floor(state.xp/500)+1}
 function getCar(id){return CARS.find(c=>c.id===id)||null}
 function getCarFromInventory(item){return getCar(item&&item.id?item.id:item&&item.car_id?item.car_id:item)}
@@ -600,7 +600,14 @@ function localUsername(){
 }
 function displayUsername(){
   const u=getUser();
-  return (u&&u.username)?("@"+u.username):(u&&u.first_name?u.first_name:"player");
+  if(u&&u.username)return "@"+u.username;
+  if(u&&u.first_name)return u.first_name+" • username не указан";
+  return "Telegram • пользователь не определён";
+}
+function telegramIdentity(){
+  const u=getUser();
+  if(!u)return {username:null,id:null,name:null};
+  return {username:u.username?"@"+u.username:null,id:u.id||null,name:[u.first_name,u.last_name].filter(Boolean).join(" ")||null};
 }
 function readJson(key,fallback){
   try{const v=JSON.parse(localStorage.getItem(key)||"");return v==null?fallback:v}catch(e){return fallback}
@@ -666,9 +673,11 @@ function render(){
  document.getElementById("xp").textContent=(state.xp%500)+" / 500";
  document.getElementById("count").textContent=state.garage.length;
  const u=getUser();
- const label=u?("@"+(u.username||u.first_name||"player")):"Telegram • мобильная игра";
- document.getElementById("userLine").textContent=u?("Telegram • "+label):"Telegram • мобильная игра";
- document.getElementById("menuUser").textContent=u?label:"Car Drop Game";
+ const identity=telegramIdentity();
+ const label=identity.username||identity.name||"Telegram • пользователь";
+ document.getElementById("userLine").textContent=identity.username?("Telegram • "+identity.username):(identity.name?"Telegram • "+identity.name+" • username не указан":"Telegram • пользователь не определён");
+ document.getElementById("menuUser").textContent=label;
+ const idEl=document.getElementById("menuTelegramId"); if(idEl) idEl.textContent=identity.id?("Telegram ID: "+identity.id):"";
  document.getElementById("adminWrap").style.display=isAdmin()?"block":"none";
  document.getElementById("countryTabs").innerHTML=Object.entries(COUNTRY_CASES).map(([id,c])=>`<button class="country-tab ${id===currentCountry?"active":""}" data-country="${id}">${c.label}</button>`).join("");
  document.querySelectorAll("[data-country]").forEach(b=>b.onclick=()=>{currentCountry=b.dataset.country;render()});
@@ -909,7 +918,7 @@ async function sellCar(index){
   return sellCarByUid(state.garage[idx]._uid);
 }
 
-function fillAdmin(){const s=document.getElementById("adminCar");s.innerHTML=CARS.map(c=>`<option value="${c.id}">${c.name} • ${money(c.value)}</option>`).join("");document.getElementById("adminStatus").textContent="Панель активна для @Otmar08."}
+function fillAdmin(){const s=document.getElementById("adminCar");s.innerHTML=CARS.map(c=>`<option value="${c.id}">${c.name} • ${money(c.value)}</option>`).join("");document.getElementById("adminStatus").textContent="👑 Владелец: @Otmar08 • доступ только по Telegram username"}
 function setupAdmin(){if(isAdmin()){document.getElementById("adminWrap").style.display="block";fillAdmin()}else document.getElementById("adminWrap").style.display="none"}
 function closeInfo(){document.getElementById("infoModal").classList.remove("show")}
 function openInfo(title,body,sub=""){document.getElementById("infoTitle").textContent=title;document.getElementById("infoSub").textContent=sub;document.getElementById("infoBody").innerHTML=body;document.getElementById("infoModal").classList.add("show")}
